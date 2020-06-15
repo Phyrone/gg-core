@@ -1,15 +1,13 @@
-import kr.entree.spigradle.kotlin.bungeecord
-import kr.entree.spigradle.kotlin.jitpack
-import kr.entree.spigradle.kotlin.spigot
 import java.util.*
 import java.io.FileInputStream
+import com.github.jengelman.gradle.plugins.shadow.transformers.*
+import kr.entree.spigradle.kotlin.*
 
 plugins {
     java
     maven
     `maven-publish`
     idea
-    groovy
     id("kr.entree.spigradle") version "1.2.4"
     id("org.jetbrains.dokka") version "0.10.1"
     id("com.github.johnrengelman.shadow") version "5.2.0"
@@ -26,12 +24,20 @@ repositories {
 }
 allprojects {
     repositories {
-        mavenLocal()
-        mavenCentral()
-        jcenter()
         spigot()
+        paper()
         bungeecord()
         jitpack()
+        mavenCentral()
+        mavenLocal()
+        jcenter()
+        codemc()
+        maven("https://jcenter.bintray.com")
+        maven("https://libraries.minecraft.net")
+        maven("https://raw.github.com/rjenkinsjr/maven2/repo")
+        maven("https://oss.sonatype.org/content/groups/public/")
+        maven("https://dl.cloudsmith.io/public/anand-beh/arim-repo/maven/")
+
     }
 
 }
@@ -69,8 +75,19 @@ tasks {
 
     }
     shadowJar {
-        classifier = null
-        version = null
+        classifier = ""
+        baseName = "GG-Core"
+        //version = null
+        archiveVersion.set("")
+
+        mergeServiceFiles()
+        transform(ApacheLicenseResourceTransformer())
+        transform(ApacheNoticeResourceTransformer())
+        transform(ManifestAppenderTransformer())
+        transform(Log4j2PluginsCacheFileTransformer())
+        dependencies {
+            this.exclude(dependency("org.yaml:snakeyaml"))
+        }
     }
     spigotPluginYaml {
         enabled = false

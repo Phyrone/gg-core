@@ -33,6 +33,15 @@ dependencies {
     api("org.koin:koin-core-ext:$koin_version")
     testImplementation("org.koin:koin-test:$koin_version")
 
+    api("com.zaxxer:HikariCP:3.4.5")
+    api("com.github.mkremins:fanciful:ed870f3a19")
+    api("com.github.Phyrone:brigardier-kotlin:1.3.3")
+
+    api("com.uchuhimo", "konf-yaml", "0.22.1")
+    listOf("exposed-core", "exposed-dao", "exposed-jdbc", "exposed-java-time", "exposed-jodatime").forEach { name ->
+        api("org.jetbrains.exposed", name, "0.24.1")
+    }
+
 }
 
 configure<JavaPluginConvention> {
