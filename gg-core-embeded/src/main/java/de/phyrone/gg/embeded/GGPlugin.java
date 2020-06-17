@@ -79,7 +79,7 @@ public abstract class GGPlugin extends JavaPlugin {
     }
 
     private void enableIfNotHappen(@NotNull Plugin plugin) {
-        if (Bukkit.getPluginManager().isPluginEnabled(plugin)) {
+        if (!Bukkit.getPluginManager().isPluginEnabled(plugin)) {
             Bukkit.getPluginManager().enablePlugin(plugin);
         }
     }

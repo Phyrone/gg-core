@@ -77,8 +77,11 @@ tasks {
     shadowJar {
         classifier = ""
         baseName = "GG-Core"
-        //version = null
+        version = null
         archiveVersion.set("")
+        manifest {
+            attributes["GGCoreVersion"] = version
+        }
 
         mergeServiceFiles()
         transform(ApacheLicenseResourceTransformer())
