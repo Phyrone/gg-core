@@ -78,19 +78,16 @@ tasks {
         classifier = ""
         baseName = "GG-Core"
         version = null
-        archiveVersion.set("")
-        manifest {
-            attributes["GGCoreVersion"] = version
-        }
 
         mergeServiceFiles()
         transform(ApacheLicenseResourceTransformer())
         transform(ApacheNoticeResourceTransformer())
-        transform(ManifestAppenderTransformer())
+        //transform(ManifestAppenderTransformer())
         transform(Log4j2PluginsCacheFileTransformer())
         dependencies {
             this.exclude(dependency("org.yaml:snakeyaml"))
         }
+        exclude("META-INF/*.kotlin_module")
     }
     spigotPluginYaml {
         enabled = false
