@@ -45,7 +45,7 @@ public abstract class GGPlugin extends JavaPlugin {
 
 
     @NotNull
-    abstract List<Class<GGModule>> getModules();
+    protected abstract List<Class<GGModule>> getModules();
 
     @Override
     final public void onDisable() {
