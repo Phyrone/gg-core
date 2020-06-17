@@ -1,6 +1,7 @@
 package de.phyrone.gg.bukkit
 
 import de.phyrone.gg.GGApi
+import de.phyrone.gg.module.AbstractModuleManager
 import de.phyrone.gg.module.GGApiProvider
 import de.phyrone.gg.module.GGModule
 import de.phyrone.gg.module.ModuleManager
@@ -13,6 +14,10 @@ import org.koin.core.context.KoinContext
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
 import java.util.*
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
+import java.util.concurrent.ThreadPoolExecutor
+import java.util.function.Supplier
 import kotlin.collections.ArrayList
 
 private typealias PluginMarker = kr.entree.spigradle.Plugin
@@ -21,10 +26,18 @@ private typealias PluginMarker = kr.entree.spigradle.Plugin
 class GGCorePlugin : JavaPlugin(), GGApiProvider<Plugin, GGBukkitApi> {
 
     private val apiMap = WeakHashMap<Plugin, GGCoreApiImpl>()
+    lateinit var executorService: ExecutorService
     override fun getApi(target: Plugin): GGBukkitApi = apiMap[target] ?: GGCoreApiImpl(target, this).also { api ->
         apiMap[target] = api
     }
 
+    override fun onEnable() {
+        executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors().coerceAtLeast(2))
+    }
+
+    override fun onDisable() {
+        executorService.shutdown()
+    }
 }
 
 private class GGCoreApiImpl(
@@ -47,29 +60,33 @@ private class GGCoreApiImpl(
         }
     }
     private val koin by lazy { koinApp.koin }
-    override val moduleManager: ModuleManager by lazy { GGCoreModuleManagerImpl(koin) }
+    override val moduleManager: ModuleManager by lazy { GGCoreModuleManagerImpl(koin, corePlugin.executorService) }
 
     private class GGCoreModuleManagerImpl(
-        private val koin: Koin
-    ) : ModuleManager {
+        private val koin: Koin,
+        executorService: ExecutorService
+    ) : ModuleManager, AbstractModuleManager(executorService) {
 
-        private val modules = ArrayList<GGModule>()
-        override fun registerModules(modules: List<Class<out GGModule>>) {
-            this.modules.addAll(modules.mapNotNull { moduleClass ->
-                runCatching { moduleClass.getConstructor(Koin::class.java).newInstance(koin) }.getOrNull()
-            })
+        lateinit var getModulesHandler: Supplier<List<Class<GGModule>>>
+        override fun getModuleHandler(getModulesHandler: Supplier<List<Class<GGModule>>>) {
+            this.getModulesHandler = getModulesHandler
         }
 
         override fun onEnable() {
-            modules.forEach { module -> module.onEnable() }
+            enableModules()
         }
 
         override fun onReload() {
-            modules.forEach { module -> module.onReload() }
+            reloadModules()
         }
 
         override fun onDisable() {
-            modules.forEach { module -> module.onDisable() }
+            disableModules()
         }
+
+
+        override fun getModules(): List<GGModule> = getModulesHandler.get()
+            .map { moduleClass -> moduleClass.getConstructor(Koin::class.java).newInstance(koin) }
+
     }
 }
