@@ -20,7 +20,7 @@ import java.nio.file.Files;
 import java.util.List;
 import java.util.logging.Level;
 
-abstract class GGPlugin extends JavaPlugin {
+public abstract class GGPlugin extends JavaPlugin {
 
     protected void enable() {
     }
