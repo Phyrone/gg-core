@@ -38,11 +38,13 @@ abstract class GGPlugin extends JavaPlugin {
             return;
         }
         ModuleManager moduleManager = GGCore.getInstance(this).getModuleManager();
-        moduleManager.registerModules(getModules());
+        moduleManager.getModuleHandler(this::getModules);
         moduleManager.onEnable();
         enable();
     }
 
+
+    @NotNull
     abstract List<Class<GGModule>> getModules();
 
     @Override

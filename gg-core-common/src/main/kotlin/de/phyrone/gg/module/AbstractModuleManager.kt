@@ -7,7 +7,7 @@ import java.util.concurrent.Executor
 import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.jvm.jvmName
 
-abstract class GGModuleLoader(private val executor: Executor) {
+abstract class AbstractModuleManager(private val executor: Executor) {
     private val moduleActionLock = Object()
 
     //im too bad to use wait notify

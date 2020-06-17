@@ -1,5 +1,5 @@
 import de.phyrone.gg.module.GGModule
-import de.phyrone.gg.module.GGModuleLoader
+import de.phyrone.gg.module.AbstractModuleManager
 import de.phyrone.gg.module.annotations.ModuleDependencies
 import de.phyrone.gg.module.annotations.ModuleName
 import org.junit.Test
@@ -9,7 +9,7 @@ class ModuleLoaderTest {
 
     @Test
     fun test() {
-        val moduleLoader = TestModuleLoader()
+        val moduleLoader = TestModuleManager()
 
         println("Enable Modules")
         moduleLoader.enableModules()
@@ -25,7 +25,7 @@ class ModuleLoaderTest {
     }
 }
 
-class TestModuleLoader : GGModuleLoader(Executors.newFixedThreadPool(4)) {
+class TestModuleManager : AbstractModuleManager(Executors.newFixedThreadPool(4)) {
     override fun getModules() = listOf(
         TestModuleA,
         TestModuleB,
