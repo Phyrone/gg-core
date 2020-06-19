@@ -23,17 +23,19 @@ private typealias PluginMarker = kr.entree.spigradle.Plugin
 class GGCorePlugin : JavaPlugin(), GGApiProvider<Plugin, GGBukkitApi> {
 
     private val apiMap = WeakHashMap<Plugin, GGCoreApiImpl>()
-    lateinit var executorService: ExecutorService
+    internal var executorService: ExecutorService? = null
     override fun getApi(target: Plugin): GGBukkitApi = apiMap[target] ?: GGCoreApiImpl(target, this).also { api ->
         apiMap[target] = api
     }
 
     override fun onEnable() {
-        executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors().coerceAtLeast(2))
+        executorService?.shutdown()
+        executorService = Executors.newCachedThreadPool()
     }
 
     override fun onDisable() {
-        executorService.shutdown()
+        executorService?.shutdown()
+        executorService = null
     }
 }
 
@@ -57,7 +59,12 @@ private class GGCoreApiImpl(
         }
     }
     private val koin by lazy { koinApp.koin }
-    override val moduleManager: ModuleManager by lazy { GGCoreModuleManagerImpl(koin, corePlugin.executorService) }
+    override val moduleManager: ModuleManager by lazy {
+        GGCoreModuleManagerImpl(
+            koin,
+            corePlugin.executorService ?: error("could not load threadpool for start! is the core working?")
+        )
+    }
 
     private class GGCoreModuleManagerImpl(
         private val koin: Koin,
