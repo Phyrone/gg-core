@@ -25,7 +25,7 @@ public abstract class GGPlugin extends JavaPlugin {
     protected void enable() {
     }
 
-    private void disable() {
+    protected void disable() {
     }
 
     @Override
