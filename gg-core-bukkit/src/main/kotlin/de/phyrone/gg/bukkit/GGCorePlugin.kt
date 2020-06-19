@@ -10,15 +10,12 @@ import org.bukkit.plugin.Plugin
 import org.bukkit.plugin.java.JavaPlugin
 import org.koin.core.Koin
 import org.koin.core.KoinApplication
-import org.koin.core.context.KoinContext
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
 import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import java.util.concurrent.ThreadPoolExecutor
 import java.util.function.Supplier
-import kotlin.collections.ArrayList
 
 private typealias PluginMarker = kr.entree.spigradle.Plugin
 
@@ -67,8 +64,8 @@ private class GGCoreApiImpl(
         executorService: ExecutorService
     ) : ModuleManager, AbstractModuleManager(executorService) {
 
-        lateinit var getModulesHandler: Supplier<List<Class<GGModule>>>
-        override fun getModuleHandler(getModulesHandler: Supplier<List<Class<GGModule>>>) {
+        lateinit var getModulesHandler: Supplier<List<Class<out GGModule>>>
+        override fun getModuleHandler(getModulesHandler: Supplier<List<Class<out GGModule>>>) {
             this.getModulesHandler = getModulesHandler
         }
 
