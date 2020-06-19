@@ -49,6 +49,18 @@ public abstract class GGPlugin extends JavaPlugin {
 
     @Override
     final public void onDisable() {
+        Plugin corePlugin = getCorePlugin();
+        assert corePlugin != null;
+        if (!corePlugin.isEnabled()) {
+            Bukkit.getPluginManager().enablePlugin(corePlugin);
+            disableSteps();
+            Bukkit.getPluginManager().disablePlugin(corePlugin);
+        } else {
+            disableSteps();
+        }
+    }
+
+    private void disableSteps() {
         GGCore.getInstance(this).getModuleManager().onDisable();
         disable();
     }
