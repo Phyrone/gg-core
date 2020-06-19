@@ -5,11 +5,11 @@ import org.koin.core.KoinComponent
 
 interface GGModule : KoinComponent {
 
-    fun onEnable()
+    fun onEnable() {}
 
-    fun onDisable()
+    fun onDisable() {}
 
-    fun onReload()
+    fun onReload() {}
 
 }
 

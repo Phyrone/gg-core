@@ -1,12 +1,10 @@
-import java.util.*
-import java.io.FileInputStream
-import com.github.jengelman.gradle.plugins.shadow.transformers.*
+import com.github.jengelman.gradle.plugins.shadow.transformers.Log4j2PluginsCacheFileTransformer
 import kr.entree.spigradle.kotlin.*
 
 plugins {
     java
     maven
-    `maven-publish`
+
     idea
     id("kr.entree.spigradle") version "1.2.4"
     id("org.jetbrains.dokka") version "0.10.1"
@@ -80,14 +78,32 @@ tasks {
         version = null
 
         mergeServiceFiles()
-        transform(ApacheLicenseResourceTransformer())
-        transform(ApacheNoticeResourceTransformer())
+        //transform(ApacheLicenseResourceTransformer())
+        //transform(ApacheNoticeResourceTransformer())
         //transform(ManifestAppenderTransformer())
         transform(Log4j2PluginsCacheFileTransformer())
         dependencies {
             this.exclude(dependency("org.yaml:snakeyaml"))
         }
-        exclude("META-INF/*.kotlin_module")
+        exclude(
+            "**/*.kotlin_metadata",
+            "**/*.kotlin_module",
+            "**/*.kotlin_builtins",
+            "META-INF/maven/**",
+            "META-INF/versions/**",
+            "META-INF/proguard/**",
+            "META-INF/plexus/**",
+            "META-INF/sisu/**",
+            "META-INF/DEPENDENCIES",
+            "META-INF/NOTICE",
+            "META-INF/NOTICE.txt",
+            "META-INF/LICENSE",
+            "META-INF/LICENSE.txt",
+            "licenses/**",
+            "LICENSE",
+            "LICENSE.txt",
+            "module-info.class"
+        )
     }
     spigotPluginYaml {
         enabled = false
@@ -97,41 +113,4 @@ tasks {
     }
 
 }
-val publishPropertiesFile = File("./publish.properties")
-val publishProperties by lazy {
-    Properties().also { publishProperties ->
-        if (publishPropertiesFile.exists()) {
-            publishProperties.load(FileInputStream(publishPropertiesFile))
-        }
-    }
-}
 
-publishing {
-    repositories {
-        maven {
-            setUrl(
-                if ((version as String).endsWith("-SNAPSHOT"))
-                    "https://repo.phyrone.de/repository/maven-snapshot/" else
-                    "https://repo.phyrone.de/repository/maven-release/"
-            )
-            credentials {
-                username = (publishProperties["repo.username"] as? String) ?: System.getenv("REPO_USER")
-                password = (publishProperties["repo.password"] as? String) ?: System.getenv("REPO_PASSWORD")
-            }
-        }
-    }
-    publications {
-        register("core", MavenPublication::class.java) {
-            project.shadow.component(this)
-            pom {
-                developers {
-                    developer {
-                        id.set("Phyrone")
-                        name.set("Samuel Lauqa")
-                        email.set("phyrone@phyrone.de")
-                    }
-                }
-            }
-        }
-    }
-}

@@ -1,7 +1,7 @@
 import kr.entree.spigradle.kotlin.bungeecord
 import kr.entree.spigradle.kotlin.spigot
-import java.util.Properties
 import java.io.FileInputStream
+import java.util.*
 
 plugins {
     java
@@ -65,7 +65,9 @@ publishing{
     }
     publications{
         register("embeded", MavenPublication::class.java) {
-           shadow.component(this)
+            from(components.getByName("java"))
+
+            //shadow.component(this)
             //artifact(project(":gg-core-embeded").tasks.getByName("shadowJar"))
             artifactId = "gg-core-embedded"
             pom {
