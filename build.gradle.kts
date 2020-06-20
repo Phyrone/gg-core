@@ -4,7 +4,6 @@ import kr.entree.spigradle.kotlin.*
 plugins {
     java
     maven
-
     idea
     id("kr.entree.spigradle") version "1.2.4"
     id("org.jetbrains.dokka") version "0.10.1"

@@ -7,6 +7,7 @@ plugins {
     maven
     idea
     `maven-publish`
+
     kotlin("jvm")
     id("com.github.johnrengelman.shadow")
 }
@@ -66,8 +67,8 @@ tasks {
             "LICENSE",
             "LICENSE.txt",
             "module-info.class",
-            "kotlin/**",
-            "kotlinx/**"
+            "kotlin/**"
+            //,"kotlinx/**"
         )
     }
 }
