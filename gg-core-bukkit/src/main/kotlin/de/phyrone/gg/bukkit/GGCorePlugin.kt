@@ -31,6 +31,7 @@ class GGCorePlugin : JavaPlugin(), GGApiProvider<Plugin, GGBukkitApi> {
         apiMap[target] = api
     }
 
+
     override fun onEnable() {
         executorService?.shutdown()
         executorService = Executors.newCachedThreadPool()
