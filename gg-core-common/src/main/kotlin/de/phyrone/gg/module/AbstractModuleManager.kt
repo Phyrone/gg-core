@@ -3,11 +3,13 @@ package de.phyrone.gg.module
 import com.google.common.collect.Sets
 import de.phyrone.gg.module.annotations.ModuleDependencies
 import de.phyrone.gg.module.annotations.ModuleName
-import java.util.concurrent.Executor
+import java.io.Closeable
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
 import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.jvm.jvmName
 
-abstract class AbstractModuleManager(private val executor: Executor) {
+abstract class AbstractModuleManager(private var executor: ExecutorService) : Closeable {
     private val moduleActionLock = Object()
 
     //im too bad to use wait notify
@@ -39,7 +41,7 @@ abstract class AbstractModuleManager(private val executor: Executor) {
     private fun notifyModuleStatusReached(finishedModule: ModuleWrapper, targetStatus: ModuleStatus) {
         if (!allModuleStatusReached(targetStatus)) {
             notifyMap[finishedModule]!!.forEach { notifyModule ->
-                executor.execute() {
+                getExecutor().execute {
                     notifyModule.handleSetStatus(targetStatus, finishedModule)
                 }
             }
@@ -50,6 +52,15 @@ abstract class AbstractModuleManager(private val executor: Executor) {
         }
     }
 
+    var fallbackExecutor: ExecutorService? = null
+    private fun getExecutor() =
+        executor.takeUnless { executor -> executor.isShutdown || executor.isTerminated } ?: fallbackExecutor
+        ?: createFallbackExec()
+
+    protected fun createFallbackExec(): ExecutorService = Executors.newSingleThreadExecutor().also { executorService ->
+        this.fallbackExecutor = executorService
+    }
+
     @Volatile
     private var jobDone = true
     private fun pushStatus(targetStatus: ModuleStatus) {
@@ -57,7 +68,7 @@ abstract class AbstractModuleManager(private val executor: Executor) {
             assert(jobDone)
             jobDone = false
             moduleWrappers.forEach { module ->
-                executor.execute {
+                getExecutor().execute {
                     module.handleSetStatus(targetStatus, null)
                 }
             }
@@ -112,6 +123,7 @@ abstract class AbstractModuleManager(private val executor: Executor) {
         fun resetFinishedModules() {
             finishedDepdenciesSet.clear()
         }
+
         fun depdenciesReachedStatus() = finishedDepdenciesSet.size == dependencies.size
 
         val lock = Any()
@@ -142,5 +154,10 @@ abstract class AbstractModuleManager(private val executor: Executor) {
 
     private enum class ModuleStatus {
         DISABLED, ENABLED, RELOAD
+    }
+
+    override fun close() {
+        fallbackExecutor?.shutdown()
+        fallbackExecutor = null
     }
 }
