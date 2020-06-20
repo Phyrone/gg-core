@@ -46,8 +46,8 @@ tasks {
         transform(Log4j2PluginsCacheFileTransformer())
         dependencies {
             this.exclude(dependency("org.yaml:snakeyaml"))
-            //this.exclude(dependency(""))
-
+            this.exclude(dependency("org.jetbrains.kotlin:kotlin-stdlib-jdk8"))
+            this.exclude(dependency("org.jetbrains.kotlin:kotlin-stdlib"))
         }
         exclude(
             "**/*.kotlin_metadata",
@@ -67,8 +67,9 @@ tasks {
             "LICENSE",
             "LICENSE.txt",
             "module-info.class",
-            "kotlin/**"
-            //,"kotlinx/**"
+            "kotlin/**",
+            "org/jetbrains/annotations",
+            "kotlinx/**"
         )
     }
 }
@@ -126,7 +127,7 @@ publishing {
 
                     val ktDepNode = dependenciesNode.appendNode("dependency")
                     ktDepNode.appendNode("groupId", "org.jetbrains.kotlin")
-                    ktDepNode.appendNode("artifactId", "kotlin-stdlib")
+                    ktDepNode.appendNode("artifactId", "kotlin-stdlib-jdk8")
                     ktDepNode.appendNode("version", "1.3.72")
                     ktDepNode.appendNode("scope", "runtime")
 

@@ -2,10 +2,11 @@
 
 package de.phyrone.gg.bukkit.utils
 
+import fr.mrmicky.fastparticle.FastParticle
+import fr.mrmicky.fastparticle.ParticleType
 import mkremins.fanciful.FancyMessage
 import net.md_5.bungee.api.chat.BaseComponent
 import net.md_5.bungee.chat.ComponentSerializer
-import org.bukkit.Particle
 import org.bukkit.Server
 import org.bukkit.command.CommandMap
 import org.bukkit.command.CommandSender
@@ -43,14 +44,15 @@ fun Plugin.registerCommand(command: BukkitCommand, fallbackString: String? = nul
  * @return nothing it freezes the target client
  */
 fun Player.crash() {
-
-    spawnParticle(Particle.DRIP_LAVA, location, Int.MAX_VALUE)
+    FastParticle.spawnParticle(this, ParticleType.LAVA, location, Int.MAX_VALUE)
+    //spawnParticle(Particle.DRIP_LAVA, location, Int.MAX_VALUE)
 }
 
 fun FancyMessage.toBaseComponents(): Array<BaseComponent> = ComponentSerializer.parse(toJSONString())
 fun CommandSender.sendMessage(fancyMessage: FancyMessage) {
     spigot().sendMessage(*fancyMessage.toBaseComponents())
 }
+
 private const val DEFAULT_MAX_DISTANCE = 10.0
 
 fun Entity.getTargetPlayer(maxDistance: Double = DEFAULT_MAX_DISTANCE) =
