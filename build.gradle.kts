@@ -21,7 +21,8 @@ repositories {
     mavenCentral()
 }
 allprojects {
-    repositories {
+
+repositories {
         spigot()
         paper()
         bungeecord()

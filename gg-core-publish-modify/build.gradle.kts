@@ -49,9 +49,9 @@ tasks {
 
         }
         exclude(
-            //"**/*.kotlin_metadata",
-            //"**/*.kotlin_module",
-            //"**/*.kotlin_builtins",
+            "**/*.kotlin_metadata",
+            "**/*.kotlin_module",
+            "**/*.kotlin_builtins",
             "META-INF/maven/**",
             "META-INF/versions/**",
             "META-INF/proguard/**",
@@ -98,11 +98,14 @@ publishing {
         }
     }
     publications {
+
         register("core", MavenPublication::class.java) {
             artifactId = "gg-core"
             project.shadow.component(this)
 
+            //artifact(dependencies.implementation(dependencies.kotlin("stdlib-jdk8")))
             //from(components.getByName("java"))
+
             pom {
                 developers {
                     developer {
@@ -110,6 +113,22 @@ publishing {
                         name.set("Samuel Lauqa")
                         email.set("phyrone@phyrone.de")
                     }
+                }
+                withXml {
+                    val cNode = this.asNode()
+                    val dependenciesName = "dependencies"
+                    val dependenciesNode = (
+                            (cNode.get(dependenciesName)
+                                    as? groovy.util.NodeList)?.firstOrNull()
+                                    as? groovy.util.Node)
+                        ?: cNode.appendNode(dependenciesName)
+
+                    val ktDepNode = dependenciesNode.appendNode("dependency")
+                    ktDepNode.appendNode("groupId", "org.jetbrains.kotlin")
+                    ktDepNode.appendNode("artifactId", "kotlin-stdlib")
+                    ktDepNode.appendNode("version", "1.3.72")
+                    ktDepNode.appendNode("scope", "runtime")
+
                 }
             }
         }
