@@ -1,12 +1,20 @@
 package de.phyrone.gg.bukkit
 
+import de.phyrone.brig.wrapper.literal
+import de.phyrone.brig.wrapper.runs
 import de.phyrone.gg.GGApi
 import de.phyrone.gg.KOIN_DATA_FOLDER
+import de.phyrone.gg.bukkit.command.BrigadierBukkiCommand
+import de.phyrone.gg.bukkit.command.GGBukkitCommandDispatcher
+import de.phyrone.gg.bukkit.utils.registerCommand
+import de.phyrone.gg.bukkit.utils.sendMessage
 import de.phyrone.gg.module.AbstractModuleManager
 import de.phyrone.gg.module.GGApiProvider
 import de.phyrone.gg.module.GGModule
 import de.phyrone.gg.module.ModuleManager
+import mkremins.fanciful.FancyMessage
 import org.bukkit.Bukkit
+import org.bukkit.ChatColor
 import org.bukkit.event.Listener
 import org.bukkit.plugin.Plugin
 import org.bukkit.plugin.java.JavaPlugin
@@ -31,10 +39,35 @@ class GGCorePlugin : JavaPlugin(), GGApiProvider<Plugin, GGBukkitApi> {
         apiMap[target] = api
     }
 
-
+    val ggCommandDispatcher = GGBukkitCommandDispatcher()
     override fun onEnable() {
         executorService?.shutdown()
         executorService = Executors.newCachedThreadPool()
+        regCommand()
+    }
+
+    private fun regCommand() {
+        ggCommandDispatcher.literal("debug") {
+            require { commandSender.hasPermission("gg.debug") }
+        }
+        ggCommandDispatcher.literal("version") {
+            require { commandSender.hasPermission("gg.version") }
+            runs {
+                commandSender.sendMessage(
+                    FancyMessage("GG-CORE").color(ChatColor.AQUA)
+                        .then(": ").color(ChatColor.GRAY)
+                        .then(description.version).color(ChatColor.GOLD)
+                )
+            }
+        }
+        registerCommand(
+            BrigadierBukkiCommand(
+                "gg",
+                ggCommandDispatcher,
+                "all commands of the gg-core",
+                aliases = listOf("gg-core")
+            )
+        )
     }
 
     override fun onDisable() {

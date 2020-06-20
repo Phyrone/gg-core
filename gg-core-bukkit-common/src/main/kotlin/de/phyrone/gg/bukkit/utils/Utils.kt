@@ -2,6 +2,7 @@
 
 package de.phyrone.gg.bukkit.utils
 
+import fr.mrmicky.fastboard.FastBoard
 import fr.mrmicky.fastparticle.FastParticle
 import fr.mrmicky.fastparticle.ParticleType
 import mkremins.fanciful.FancyMessage
@@ -16,6 +17,7 @@ import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 import java.lang.reflect.Field
+import java.util.*
 
 private var commandMapFieldCache: Field? = null
 private fun Server.getCommandMapField(): Field =
@@ -88,3 +90,8 @@ private fun <T : Entity> getTarget(
     }
     return target?.takeUnless { entity.location.distance(it.location) > maxDistance }
 }
+
+val Player.fastBoard: FastBoard
+    get() = fastBardMap.getOrPut(this) { FastBoard(this) }
+
+private val fastBardMap = WeakHashMap<Player, FastBoard>()
