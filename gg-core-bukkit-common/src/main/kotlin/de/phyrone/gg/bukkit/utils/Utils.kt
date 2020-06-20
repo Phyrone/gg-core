@@ -40,24 +40,29 @@ fun Plugin.registerCommand(command: BukkitCommand, fallbackString: String? = nul
 }
 
 /**
- * that's dangerous use this carefully or better dont use it
+ * that's dangerous use this carefully or just dont use it
  * @return nothing it freezes the target client
  */
 fun Player.crash() {
     FastParticle.spawnParticle(this, ParticleType.LAVA, location, Int.MAX_VALUE)
-    //spawnParticle(Particle.DRIP_LAVA, location, Int.MAX_VALUE)
 }
 
 fun FancyMessage.toBaseComponents(): Array<BaseComponent> = ComponentSerializer.parse(toJSONString())
 fun CommandSender.sendMessage(fancyMessage: FancyMessage) {
-    spigot().sendMessage(*fancyMessage.toBaseComponents())
+    if (this is Player) {
+        this.spigot().sendMessage(*fancyMessage.toBaseComponents())
+    } else {
+        sendMessage(fancyMessage.toOldMessageFormat())
+    }
 }
 
 private const val DEFAULT_MAX_DISTANCE = 10.0
 
+@JvmOverloads
 fun Entity.getTargetPlayer(maxDistance: Double = DEFAULT_MAX_DISTANCE) =
     getTarget(this, this.world.players, maxDistance)
 
+@JvmOverloads
 fun LivingEntity.getTargetEntitySafe(maxDistance: Double = DEFAULT_MAX_DISTANCE) =
     getTarget(this, this.world.entities, maxDistance)
 

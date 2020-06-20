@@ -46,13 +46,13 @@ tasks {
         transform(Log4j2PluginsCacheFileTransformer())
         dependencies {
             this.exclude(dependency("org.yaml:snakeyaml"))
-            this.exclude(dependency("org.jetbrains.kotlin:kotlin-stdlib-jdk8"))
-            this.exclude(dependency("org.jetbrains.kotlin:kotlin-stdlib"))
+            //this.exclude(dependency("org.jetbrains.kotlin:kotlin-stdlib-jdk8"))
+            //this.exclude(dependency("org.jetbrains.kotlin:kotlin-stdlib"))
         }
         exclude(
-            "**/*.kotlin_metadata",
-            "**/*.kotlin_module",
-            "**/*.kotlin_builtins",
+            //"**/*.kotlin_metadata",
+            //"**/*.kotlin_module",
+            //"**/*.kotlin_builtins",
             "META-INF/maven/**",
             "META-INF/versions/**",
             "META-INF/proguard/**",
@@ -125,11 +125,17 @@ publishing {
                                     as? groovy.util.Node)
                         ?: cNode.appendNode(dependenciesName)
 
-                    val ktDepNode = dependenciesNode.appendNode("dependency")
-                    ktDepNode.appendNode("groupId", "org.jetbrains.kotlin")
-                    ktDepNode.appendNode("artifactId", "kotlin-stdlib-jdk8")
-                    ktDepNode.appendNode("version", "1.3.72")
-                    ktDepNode.appendNode("scope", "runtime")
+                    listOf(
+                        "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.3.72",
+                        "org.spigotmc:spigot-api:1.15.2-R0.1-SNAPSHOT"
+                    ).forEach { dep ->
+                        val splited = dep.split(":")
+                        val depNode = dependenciesNode.appendNode("dependency")
+                        depNode.appendNode("groupId", splited.component1())
+                        depNode.appendNode("artifactId", splited.component2())
+                        depNode.appendNode("version", splited.component3())
+                        depNode.appendNode("scope", "runtime")
+                    }
 
                 }
             }
