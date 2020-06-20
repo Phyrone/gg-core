@@ -51,18 +51,18 @@ fun FancyMessage.toBaseComponents(): Array<BaseComponent> = ComponentSerializer.
 fun CommandSender.sendMessage(fancyMessage: FancyMessage) {
     spigot().sendMessage(*fancyMessage.toBaseComponents())
 }
+private const val DEFAULT_MAX_DISTANCE = 10.0
 
-fun Entity.getTargetPlayer() = getTarget(this, this.world.players)
+fun Entity.getTargetPlayer(maxDistance: Double = DEFAULT_MAX_DISTANCE) =
+    getTarget(this, this.world.players, maxDistance)
 
-
-fun LivingEntity.getTargetEntitySafe(distance: Int = 10) = kotlin.runCatching {
-    getTargetEntity(distance)
-}.getOrElse { getTarget(this, this.world.entities) }
-
+fun LivingEntity.getTargetEntitySafe(maxDistance: Double = DEFAULT_MAX_DISTANCE) =
+    getTarget(this, this.world.entities, maxDistance)
 
 private fun <T : Entity> getTarget(
     entity: Entity,
-    entities: List<T>
+    entities: List<T>,
+    maxDistance: Double
 ): T? {
     var target: T? = null
     val threshold = 1.0
@@ -84,5 +84,5 @@ private fun <T : Entity> getTarget(
             ) target = other
         }
     }
-    return target
+    return target?.takeUnless { entity.location.distance(it.location) > maxDistance }
 }
