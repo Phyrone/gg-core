@@ -1,16 +1,19 @@
 package de.phyrone.gg.bukkit
 
 import de.phyrone.gg.GGApi
+import de.phyrone.gg.KOIN_DATA_FOLDER
 import de.phyrone.gg.module.AbstractModuleManager
 import de.phyrone.gg.module.GGApiProvider
 import de.phyrone.gg.module.GGModule
 import de.phyrone.gg.module.ModuleManager
 import org.bukkit.Bukkit
+import org.bukkit.event.Listener
 import org.bukkit.plugin.Plugin
 import org.bukkit.plugin.java.JavaPlugin
 import org.koin.core.Koin
 import org.koin.core.KoinApplication
 import org.koin.core.context.startKoin
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import java.util.*
 import java.util.concurrent.ExecutorService
@@ -55,19 +58,19 @@ private class GGCoreApiImpl(
                 single { Bukkit.getScheduler() }
                 single { Bukkit.getConsoleSender() }
                 single { Bukkit.getScoreboardManager() }
+                single { targetPlugin.logger }
+                single(named(KOIN_DATA_FOLDER)) { targetPlugin.dataFolder }
             })
         }
     }
     private val koin by lazy { koinApp.koin }
     override val moduleManager: ModuleManager by lazy {
         GGCoreModuleManagerImpl(
-            koin,
             corePlugin.executorService ?: error("could not load threadpool for start! is the core working?")
         )
     }
 
-    private class GGCoreModuleManagerImpl(
-        private val koin: Koin,
+    private inner class GGCoreModuleManagerImpl(
         executorService: ExecutorService
     ) : ModuleManager, AbstractModuleManager(executorService) {
 
@@ -90,7 +93,13 @@ private class GGCoreApiImpl(
 
 
         override fun getModules(): List<GGModule> = getModulesHandler.get()
-            .map { moduleClass -> moduleClass.getConstructor(Koin::class.java).newInstance(koin) }
+            .map { moduleClass ->
+                moduleClass.getConstructor(Koin::class.java).newInstance(koin).also { module ->
+                    if (module is Listener) {
+                        Bukkit.getPluginManager().registerEvents(module, targetPlugin)
+                    }
+                }
+            }
 
     }
 }
