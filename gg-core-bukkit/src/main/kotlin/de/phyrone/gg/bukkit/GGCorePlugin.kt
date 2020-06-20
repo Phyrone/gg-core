@@ -39,7 +39,7 @@ class GGCorePlugin : JavaPlugin(), GGApiProvider<Plugin, GGBukkitApi> {
         apiMap[target] = api
     }
 
-    val ggCommandDispatcher = GGBukkitCommandDispatcher()
+    private val ggCommandDispatcher = GGBukkitCommandDispatcher()
     override fun onEnable() {
         executorService?.shutdown()
         executorService = Executors.newCachedThreadPool()

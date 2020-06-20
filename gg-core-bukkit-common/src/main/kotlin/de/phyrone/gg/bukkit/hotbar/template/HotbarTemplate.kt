@@ -1,5 +1,7 @@
-package de.phyrone.plugincore.hotbar.template
+package de.phyrone.gg.bukkit.hotbar.template
+
+import de.phyrone.gg.bukkit.hotbar.PlayerHotbar
 
 interface HotbarTemplate : Cloneable {
-    fun _root_ide_package_.de.phyrone.plugincore.hotbar.PlayerHotbar.draw()
+    fun PlayerHotbar.draw()
 }

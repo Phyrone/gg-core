@@ -1,4 +1,4 @@
-package de.phyrone.plugincore.items
+package de.phyrone.gg.bukkit.items
 
 import org.bukkit.entity.Entity
 import org.bukkit.entity.Player

@@ -1,8 +1,8 @@
-package de.phyrone.plugincore.hotbar
+package de.phyrone.gg.bukkit.hotbar
 
-import de.phyrone.core.bukkit.items.DynamicItem
-import de.phyrone.core.bukkit.items.Interactive
-import de.phyrone.core.bukkit.items.InteractiveItem
+import de.phyrone.gg.bukkit.items.DynamicItem
+import de.phyrone.gg.bukkit.items.Interactive
+import de.phyrone.gg.bukkit.items.InteractiveItem
 import org.bukkit.entity.Entity
 import org.bukkit.inventory.ItemStack
 

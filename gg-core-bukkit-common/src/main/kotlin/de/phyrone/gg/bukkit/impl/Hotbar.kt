@@ -1,7 +1,10 @@
-package de.phyrone.plugincore.impl
+package de.phyrone.gg.bukkit.impl
 
-import de.phyrone.core.bukkit.utils.getTargetEntitySafe
 import de.phyrone.gg.bukkit.hotbar.HotbarPlayer
+import de.phyrone.gg.bukkit.hotbar.PlayerHotbar
+import de.phyrone.gg.bukkit.items.*
+import de.phyrone.gg.bukkit.utils.getTargetEntitySafe
+import de.phyrone.plugincore.items.*
 import de.tr7zw.changeme.nbtapi.NBTItem
 import org.bukkit.Bukkit
 import org.bukkit.entity.Entity
@@ -73,7 +76,7 @@ internal class HotbarPlayerManager(private val plugin: Plugin) : Listener {
 
 internal class HotbarPlayerImpl(private val player: Player, private val plugin: Plugin) :
     HotbarPlayer,
-    _root_ide_package_.de.phyrone.plugincore.hotbar.PlayerHotbar {
+    PlayerHotbar {
     init {
         clearSlots()
     }
@@ -84,7 +87,7 @@ internal class HotbarPlayerImpl(private val player: Player, private val plugin: 
     val currentSlot: Int
         get() = inv.heldItemSlot
 
-    override val hotbar: _root_ide_package_.de.phyrone.plugincore.hotbar.PlayerHotbar = this
+    override val hotbar: PlayerHotbar = this
     private var enabledHandler: Supplier<Boolean>? = null
 
     override val isEnabled: Boolean
@@ -133,7 +136,7 @@ internal class HotbarPlayerImpl(private val player: Player, private val plugin: 
 
     private fun setItemLater(slot: Int, dynamicItem: InteractiveItem?) {
         checkSlot(slot)
-        val preItemStack = dynamicItem.get(player)
+        val preItemStack = dynamicItem?.get(player)
         val itemStack = if (preItemStack == null) null else NBTItem(preItemStack).also {
             it.setInteger(HB_ITEM_SLOT_NBT_TAG, slot)
         }.item

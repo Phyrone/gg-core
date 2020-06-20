@@ -1,4 +1,4 @@
-package de.phyrone.plugincore.placeholder
+package de.phyrone.gg.bukkit.placeholder
 
 import org.bukkit.entity.Player
 
