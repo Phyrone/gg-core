@@ -4,7 +4,6 @@ import de.phyrone.gg.bukkit.hotbar.HotbarPlayer
 import de.phyrone.gg.bukkit.hotbar.PlayerHotbar
 import de.phyrone.gg.bukkit.items.*
 import de.phyrone.gg.bukkit.utils.getTargetEntitySafe
-import de.phyrone.plugincore.items.*
 import de.tr7zw.changeme.nbtapi.NBTItem
 import org.bukkit.Bukkit
 import org.bukkit.entity.Entity
