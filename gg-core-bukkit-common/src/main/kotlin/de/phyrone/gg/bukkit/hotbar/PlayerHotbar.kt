@@ -18,6 +18,5 @@ interface PlayerHotbar {
 
     fun removeItem(slot: Int)
 
-    fun pushInteraction(slot: Int, type: Interactive.Interaction, shift: Boolean)
     fun pushInteraction(slot: Int, type: Interactive.Interaction, shift: Boolean, target: Entity?)
 }

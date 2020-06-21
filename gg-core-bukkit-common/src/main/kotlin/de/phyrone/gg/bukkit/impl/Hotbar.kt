@@ -5,6 +5,7 @@ import de.phyrone.gg.bukkit.items.*
 import de.phyrone.gg.bukkit.utils.getTargetEntitySafe
 import de.tr7zw.changeme.nbtapi.NBTItem
 import org.bukkit.Bukkit
+import org.bukkit.Material
 import org.bukkit.entity.Entity
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -83,21 +84,38 @@ class HotbarPlayerManager(private val plugin: Plugin) : Listener {
         val player = players[event.player] ?: return
         val slot = NBTItem(event.itemDrop.itemStack).getInteger(HB_ITEM_SLOT_NBT_TAG) ?: return
         event.isCancelled = true
-        player.pushInteraction(slot, Interactive.Interaction.DROP, event.player.isSneaking)
+        player.pushInteraction(
+            slot,
+            Interactive.Interaction.DROP,
+            event.player.isSneaking,
+            event.player.getTargetEntitySafe()
+        )
     }
 
     @EventHandler
     private fun onSelect(event: PlayerItemHeldEvent) {
         val player = players[event.player] ?: return
-        player.pushInteraction(event.newSlot, Interactive.Interaction.DROP, event.player.isSneaking)
+        player.pushInteraction(
+            event.newSlot,
+            Interactive.Interaction.DROP,
+            event.player.isSneaking,
+            event.player.getTargetEntitySafe()
+        )
     }
 
     @EventHandler
-    private fun onSelect(event: PlayerSwapHandItemsEvent) {
+    private fun onSwap(event: PlayerSwapHandItemsEvent) {
         val player = players[event.player] ?: return
-        val slot = NBTItem(event.mainHandItem ?: return).getInteger(HB_ITEM_SLOT_NBT_TAG) ?: return
         event.isCancelled = true
-        player.pushInteraction(slot, Interactive.Interaction.OFFHAND_SWAP, event.player.isSneaking)
+        val slot = NBTItem(event.offHandItem?.takeUnless { it.type == Material.AIR } ?: return).getInteger(
+            HB_ITEM_SLOT_NBT_TAG
+        ) ?: return
+        player.pushInteraction(
+            slot,
+            Interactive.Interaction.OFFHAND_SWAP,
+            event.player.isSneaking,
+            event.player.getTargetEntitySafe()
+        )
     }
 
 }
@@ -171,9 +189,6 @@ private class HotbarPlayerImpl(private val player: Player, private val plugin: P
         setItemLater(slot, null)
     }
 
-    override fun pushInteraction(slot: Int, type: Interactive.Interaction, shift: Boolean) {
-        pushInteraction(slot, type, shift, null)
-    }
 
     override fun pushInteraction(slot: Int, type: Interactive.Interaction, shift: Boolean, target: Entity?) {
         val item = items[slot] ?: return
