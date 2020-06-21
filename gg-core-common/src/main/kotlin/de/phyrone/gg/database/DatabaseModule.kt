@@ -50,7 +50,7 @@ open class DatabaseModule(koin: Koin, val configSpec: DatabaseConfigSpec) : Defa
             logger.warning("Database provider " + providerName + "not fround -> fall back to h2")
             fallbackProvider
         }
-        return provider[config]
+        return provider[config, getKoin()]
     }
 
     final override fun onDisable() {
