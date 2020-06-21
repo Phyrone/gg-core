@@ -146,7 +146,8 @@ private class HotbarPlayerImpl(private val player: Player, private val plugin: P
     }
 
     private fun checkSlot(slot: Int) {
-        if (slot in 0..8) throw IndexOutOfBoundsException("you need to set the item in a range between 0 to 8")
+
+        if (slot !in 0..8) throw IndexOutOfBoundsException("you need to set the item in a range between 0 to 8")
     }
 
     private fun setItemLater(slot: Int, dynamicItem: InteractiveItem?) {
@@ -179,6 +180,7 @@ private class HotbarPlayerImpl(private val player: Player, private val plugin: P
         item.exec(player, target, type, shift)
     }
 
+    @Suppress("NOTHING_TO_INLINE")
     private inline fun clearSlots() {
         Bukkit.getScheduler().runTask(plugin, Runnable {
             repeat(9) { slot ->
