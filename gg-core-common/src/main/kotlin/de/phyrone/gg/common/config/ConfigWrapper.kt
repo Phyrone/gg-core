@@ -1,4 +1,4 @@
-package de.phyrone.gg.bukkit.config
+package de.phyrone.gg.common.config
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.uchuhimo.konf.*
@@ -7,7 +7,7 @@ import com.uchuhimo.konf.source.Writer
 import com.uchuhimo.konf.source.json.toJson
 import com.uchuhimo.konf.source.properties.toProperties
 import com.uchuhimo.konf.source.yaml.toYaml
-import de.phyrone.gg.bukkit.config.ConfigFormat.Companion.findByEndingOrNull
+import de.phyrone.gg.common.config.ConfigFormat.Companion.findByEndingOrNull
 import java.io.*
 import java.util.*
 
@@ -29,14 +29,13 @@ class ConfigWrapper(
     fun load(stream: InputStream, name: String) =
         load(
             stream, findByEndingOrNull(
-                name.split(
-                    "."
-                ).last()
-            ) ?: ConfigWrapper.fallbackFormat
+                name.substringAfterLast('.', "")
+            ) ?: fallbackFormat
         )
 
     fun load(stream: InputStream, format: ConfigFormat) {
         config = format.load(config, stream)
+
     }
 
     fun save(stream: OutputStream, format: ConfigFormat) =
@@ -48,7 +47,7 @@ class ConfigWrapper(
                 name.split(
                     "."
                 ).last()
-            ) ?: ConfigWrapper.Static.fallbackFormat
+            ) ?: fallbackFormat
         )
 
     fun save(file: File) = save(java.io.FileOutputStream(file), file.name)
@@ -139,13 +138,13 @@ class ConfigWrapper(
 }
 
 enum class ConfigFormat(
-    private val handler: ConfigFormat.FormatHandler,
+    private val handler: FormatHandler,
     private vararg val fileEndings: String
 ) {
-    NONE(ConfigFormat.EmptyFormatHandler),
-    JSON(ConfigFormat.JsonFormatHandler, "json"),
-    YAML(ConfigFormat.YamlFormatHandler, "yml", "yaml"),
-    PROPERTIES(ConfigFormat.PropertiesFormatHandler, "properties");
+    NONE(EmptyFormatHandler),
+    JSON(JsonFormatHandler, "json"),
+    YAML(YamlFormatHandler, "yml", "yaml"),
+    PROPERTIES(PropertiesFormatHandler, "properties");
     //HOCON(HoconFormatHandler, "conf", "hocon"),
     //XML(XmlFormatHandler, "xml"),
     //TOML(TomlFormatHandler, "toml",/* Looks very similar*/"ini");
@@ -171,12 +170,12 @@ enum class ConfigFormat(
         fun save(config: Config): Writer
     }
 
-    private object YamlFormatHandler : ConfigFormat.FormatHandler {
+    private object YamlFormatHandler : FormatHandler {
         override fun load(config: Config) = config.from.yaml
         override fun save(config: Config) = config.toYaml
     }
 
-    private object JsonFormatHandler : ConfigFormat.FormatHandler {
+    private object JsonFormatHandler : FormatHandler {
         override fun load(config: Config) = config.from.json
         override fun save(config: Config) = config.toJson
     }
@@ -198,18 +197,18 @@ enum class ConfigFormat(
     }
     */
     private object PropertiesFormatHandler :
-        ConfigFormat.FormatHandler {
+        FormatHandler {
         override fun load(config: Config) = config.from.properties
         override fun save(config: Config) = config.toProperties
     }
 
-    private object EmptyFormatHandler : ConfigFormat.FormatHandler {
+    private object EmptyFormatHandler : FormatHandler {
         override fun load(config: Config) = Loader(
             config,
-            ConfigFormat.VoidLoader
+            VoidLoader
         )
 
-        override fun save(config: Config) = ConfigFormat.VoidWriter
+        override fun save(config: Config) = VoidWriter
     }
 
     private object VoidWriter : Writer {
@@ -220,7 +219,7 @@ enum class ConfigFormat(
     private object VoidLoader : Provider, Source {
 
         override val info = SourceInfo()
-        override val tree: TreeNode = ConfigFormat.VoidTreeNode
+        override val tree: TreeNode = VoidTreeNode
 
         override fun inputStream(inputStream: InputStream) = this
 

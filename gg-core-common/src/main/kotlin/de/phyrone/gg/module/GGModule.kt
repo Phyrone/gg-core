@@ -13,7 +13,7 @@ interface GGModule : KoinComponent {
 
 }
 
-open class BasicGGModule(
+open class DefaultGGModule(
     private val koin: Koin
 ) : GGModule {
     override fun getKoin() = koin

@@ -5,7 +5,7 @@ import de.phyrone.brig.wrapper.getArgument
 import de.phyrone.brig.wrapper.literal
 import de.phyrone.brig.wrapper.runs
 import de.phyrone.gg.GGApi
-import de.phyrone.gg.KOIN_DATA_FOLDER
+import de.phyrone.gg.KOIN_FOLDER_DATA
 import de.phyrone.gg.bukkit.command.BrigadierBukkiCommand
 import de.phyrone.gg.bukkit.command.GGBukkitCommandDispatcher
 import de.phyrone.gg.bukkit.impl.HotbarPlayerManager
@@ -121,7 +121,7 @@ private class GGCoreApiImpl(
                 single { Bukkit.getConsoleSender() }
                 single { Bukkit.getScoreboardManager() }
                 single { targetPlugin.logger }
-                single(named(KOIN_DATA_FOLDER)) { targetPlugin.dataFolder }
+                single(named(KOIN_FOLDER_DATA)) { targetPlugin.dataFolder }
             })
         }
     }
