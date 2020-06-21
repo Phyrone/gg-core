@@ -10,6 +10,7 @@ import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
+import org.bukkit.event.entity.EntityPickupItemEvent
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryType
 import org.bukkit.event.player.PlayerDropItemEvent
@@ -37,7 +38,7 @@ class HotbarPlayerManager(private val plugin: Plugin) : Listener {
 
     operator fun get(player: Player): PlayerHotbar? = players[player]
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     private fun onInvClick(event: InventoryClickEvent) {
         val inv = event.inventory
         when (inv.type) {
@@ -46,6 +47,15 @@ class HotbarPlayerManager(private val plugin: Plugin) : Listener {
                     event.isCancelled = true
             }
             else -> return
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    fun onPickup(event: EntityPickupItemEvent) {
+        val entity = event.entity
+        if (entity is Player) {
+            if (players.containsKey(entity))
+                event.isCancelled = true
         }
     }
 
