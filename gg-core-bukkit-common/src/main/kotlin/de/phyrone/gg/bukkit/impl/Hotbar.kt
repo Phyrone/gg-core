@@ -97,7 +97,7 @@ class HotbarPlayerManager(private val plugin: Plugin) : Listener {
         val player = players[event.player] ?: return
         player.pushInteraction(
             event.newSlot,
-            Interactive.Interaction.DROP,
+            Interactive.Interaction.HOVER,
             event.player.isSneaking,
             event.player.getTargetEntitySafe()
         )
