@@ -43,7 +43,7 @@ class GGBukkitCorePlugin : JavaPlugin(), GGApiProvider<Plugin, GGBukkitApi> {
         apiMap[target] = api
     }
 
-    val hotbarManager by lazy { HotbarPlayerManager(this) }
+    internal val hotbarManager by lazy { HotbarPlayerManager(this) }
 
     private val ggCommandDispatcher = GGBukkitCommandDispatcher()
     override fun onEnable() {
