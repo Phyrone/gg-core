@@ -5,6 +5,7 @@ import de.phyrone.gg.bukkit.items.*
 import de.phyrone.gg.bukkit.utils.getTargetEntitySafe
 import de.tr7zw.changeme.nbtapi.NBTItem
 import org.bukkit.Bukkit
+import org.bukkit.GameMode
 import org.bukkit.Material
 import org.bukkit.entity.Entity
 import org.bukkit.entity.Player
@@ -44,8 +45,11 @@ class HotbarPlayerManager(private val plugin: Plugin) : Listener {
         val inv = event.inventory
         when (inv.type) {
             InventoryType.PLAYER, InventoryType.CREATIVE, InventoryType.CRAFTING -> {
-                if (event.slot in (0..8))
+                if (event.slot in (0..8)) {
                     event.isCancelled = true
+                    if ((event.whoClicked as? Player)?.gameMode == GameMode.CREATIVE)
+                        event.currentItem = null
+                }
             }
             else -> return
         }
@@ -68,8 +72,9 @@ class HotbarPlayerManager(private val plugin: Plugin) : Listener {
             Action.RIGHT_CLICK_AIR, Action.RIGHT_CLICK_BLOCK -> Interactive.Interaction.RIGHT_CLICK
             else -> return
         }
-        val slot = NBTItem(event.item ?: return).getInteger(HB_ITEM_SLOT_NBT_TAG) ?: return
         event.isCancelled = true
+        val slot = NBTItem(event.item ?: return).getInteger(HB_ITEM_SLOT_NBT_TAG) ?: return
+
 
         player.pushInteraction(
             slot,
@@ -82,8 +87,9 @@ class HotbarPlayerManager(private val plugin: Plugin) : Listener {
     @EventHandler
     private fun onDrop(event: PlayerDropItemEvent) {
         val player = players[event.player] ?: return
-        val slot = NBTItem(event.itemDrop.itemStack).getInteger(HB_ITEM_SLOT_NBT_TAG) ?: return
         event.isCancelled = true
+        val slot = NBTItem(event.itemDrop.itemStack).getInteger(HB_ITEM_SLOT_NBT_TAG) ?: return
+
         player.pushInteraction(
             slot,
             Interactive.Interaction.DROP,
