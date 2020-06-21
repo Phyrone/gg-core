@@ -6,6 +6,7 @@ import de.phyrone.gg.GGApi
 import de.phyrone.gg.KOIN_DATA_FOLDER
 import de.phyrone.gg.bukkit.command.BrigadierBukkiCommand
 import de.phyrone.gg.bukkit.command.GGBukkitCommandDispatcher
+import de.phyrone.gg.bukkit.impl.HotbarPlayerManager
 import de.phyrone.gg.bukkit.utils.registerCommand
 import de.phyrone.gg.bukkit.utils.sendMessage
 import de.phyrone.gg.module.AbstractModuleManager
@@ -31,13 +32,15 @@ import java.util.function.Supplier
 private typealias PluginMarker = kr.entree.spigradle.Plugin
 
 @PluginMarker
-class GGCorePlugin : JavaPlugin(), GGApiProvider<Plugin, GGBukkitApi> {
+class GGBukkitCorePlugin : JavaPlugin(), GGApiProvider<Plugin, GGBukkitApi> {
 
     private val apiMap = WeakHashMap<Plugin, GGCoreApiImpl>()
     internal var executorService: ExecutorService? = null
     override fun getApi(target: Plugin): GGBukkitApi = apiMap[target] ?: GGCoreApiImpl(target, this).also { api ->
         apiMap[target] = api
     }
+
+    val hotbarManager by lazy { HotbarPlayerManager(this) }
 
     private val ggCommandDispatcher = GGBukkitCommandDispatcher()
     override fun onEnable() {
@@ -74,11 +77,17 @@ class GGCorePlugin : JavaPlugin(), GGApiProvider<Plugin, GGBukkitApi> {
         executorService?.shutdown()
         executorService = null
     }
+
+    companion object Static {
+        @JvmStatic
+        fun getInstance() = getPlugin(GGBukkitCorePlugin::class.java)
+
+    }
 }
 
 private class GGCoreApiImpl(
     private val targetPlugin: Plugin,
-    private val corePlugin: GGCorePlugin
+    private val corePlugin: GGBukkitCorePlugin
 ) : GGBukkitApi {
 
     private val koinApp by lazy {
@@ -88,7 +97,7 @@ private class GGCoreApiImpl(
                 single<Koin>(override = true) { this@startKoin.koin }
                 single<GGBukkitApi> { this@GGCoreApiImpl }
                 single<GGApi> { this@GGCoreApiImpl }
-                single { targetPlugin }
+                single<Plugin> { targetPlugin }
                 single { Bukkit.getScheduler() }
                 single { Bukkit.getConsoleSender() }
                 single { Bukkit.getScoreboardManager() }
@@ -100,7 +109,7 @@ private class GGCoreApiImpl(
     private val koin by lazy { koinApp.koin }
     override val moduleManager: ModuleManager by lazy {
         GGCoreModuleManagerImpl(
-            corePlugin.executorService ?: error("could not load threadpool for start! is the core working?")
+            corePlugin.executorService ?: error("could not load thread pool for start! is the core working?")
         )
     }
 

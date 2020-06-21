@@ -1,6 +1,5 @@
 package de.phyrone.gg.bukkit.impl
 
-import de.phyrone.gg.bukkit.hotbar.HotbarPlayer
 import de.phyrone.gg.bukkit.hotbar.PlayerHotbar
 import de.phyrone.gg.bukkit.items.*
 import de.phyrone.gg.bukkit.utils.getTargetEntitySafe
@@ -18,11 +17,10 @@ import org.bukkit.event.player.PlayerSwapHandItemsEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.Plugin
 import java.util.*
-import java.util.function.Supplier
 
 private const val HB_ITEM_SLOT_NBT_TAG = "hb.item.slot"
 
-internal class HotbarPlayerManager(private val plugin: Plugin) : Listener {
+class HotbarPlayerManager(private val plugin: Plugin) : Listener {
     init {
         Bukkit.getPluginManager().registerEvents(this, plugin)
     }
@@ -32,10 +30,10 @@ internal class HotbarPlayerManager(private val plugin: Plugin) : Listener {
         players.remove(player)?.deleted()
     }
 
-    operator fun get(player: Player) =
-        players[player] ?: HotbarPlayerImpl(player, plugin).also { hotbarPlayerImpl ->
-            players[player] = hotbarPlayerImpl
-        }
+    fun getOrCreate(player: Player): PlayerHotbar = players.getOrPut(player) { HotbarPlayerImpl(player, plugin) }
+
+
+    operator fun get(player: Player): PlayerHotbar? = players[player]
 
     @EventHandler
     private fun onClick(event: PlayerInteractEvent) {
@@ -73,9 +71,7 @@ internal class HotbarPlayerManager(private val plugin: Plugin) : Listener {
 
 }
 
-internal class HotbarPlayerImpl(private val player: Player, private val plugin: Plugin) :
-    HotbarPlayer,
-    PlayerHotbar {
+private class HotbarPlayerImpl(private val player: Player, private val plugin: Plugin) : PlayerHotbar {
     init {
         clearSlots()
     }
@@ -86,15 +82,6 @@ internal class HotbarPlayerImpl(private val player: Player, private val plugin: 
     val currentSlot: Int
         get() = inv.heldItemSlot
 
-    override val hotbar: PlayerHotbar = this
-    private var enabledHandler: Supplier<Boolean>? = null
-
-    override val isEnabled: Boolean
-        get() = enabledHandler?.get() ?: true
-
-    override fun setIsEnabledHandling(handler: Supplier<Boolean>?) {
-        enabledHandler = handler
-    }
 
     override fun setItem(slot: Int, item: DynamicItem) {
 
@@ -116,6 +103,7 @@ internal class HotbarPlayerImpl(private val player: Player, private val plugin: 
         }
         setItem(slot, interactive)
     }
+
 
     override fun setItem(slot: Int, item: InteractiveItem) {
         setItemLater(slot, item)
