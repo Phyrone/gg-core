@@ -10,6 +10,8 @@ import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
+import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.event.inventory.InventoryType
 import org.bukkit.event.player.PlayerDropItemEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerItemHeldEvent
@@ -36,6 +38,18 @@ class HotbarPlayerManager(private val plugin: Plugin) : Listener {
     operator fun get(player: Player): PlayerHotbar? = players[player]
 
     @EventHandler
+    private fun onInvClick(event: InventoryClickEvent) {
+        val inv = event.inventory
+        when (inv.type) {
+            InventoryType.PLAYER, InventoryType.CREATIVE, InventoryType.CRAFTING -> {
+                if (event.slot in (0..8))
+                    event.isCancelled = true
+            }
+            else -> return
+        }
+    }
+
+    @EventHandler
     private fun onClick(event: PlayerInteractEvent) {
         val player = players[event.player] ?: return
         val interaction = when (event.action) {
@@ -43,9 +57,15 @@ class HotbarPlayerManager(private val plugin: Plugin) : Listener {
             Action.RIGHT_CLICK_AIR, Action.RIGHT_CLICK_BLOCK -> Interactive.Interaction.RIGHT_CLICK
             else -> return
         }
+        val slot = NBTItem(event.item ?: return).getInteger(HB_ITEM_SLOT_NBT_TAG) ?: return
         event.isCancelled = true
-        event.player.getTargetEntitySafe()
-        player.pushInteraction(player.currentSlot, interaction, event.player.isSneaking)
+
+        player.pushInteraction(
+            slot,
+            interaction,
+            event.player.isSneaking,
+            event.player.getTargetEntitySafe()
+        )
     }
 
     @EventHandler
@@ -65,8 +85,9 @@ class HotbarPlayerManager(private val plugin: Plugin) : Listener {
     @EventHandler
     private fun onSelect(event: PlayerSwapHandItemsEvent) {
         val player = players[event.player] ?: return
+        val slot = NBTItem(event.mainHandItem ?: return).getInteger(HB_ITEM_SLOT_NBT_TAG) ?: return
         event.isCancelled = true
-        player.pushInteraction(player.currentSlot, Interactive.Interaction.OFFHAND_SWAP, event.player.isSneaking)
+        player.pushInteraction(slot, Interactive.Interaction.OFFHAND_SWAP, event.player.isSneaking)
     }
 
 }
@@ -78,9 +99,6 @@ private class HotbarPlayerImpl(private val player: Player, private val plugin: P
 
     private val items = Array<InteractiveItem?>(9) { null }
     private val inv by lazy { player.inventory }
-
-    val currentSlot: Int
-        get() = inv.heldItemSlot
 
 
     override fun setItem(slot: Int, item: DynamicItem) {
