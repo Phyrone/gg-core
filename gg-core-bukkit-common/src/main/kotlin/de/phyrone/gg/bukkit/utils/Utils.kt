@@ -33,10 +33,8 @@ fun Server.getCommandMapOnNonPaperServers() = getCommandMapField().get(this) as 
 
 @JvmOverloads
 fun Plugin.registerCommand(command: BukkitCommand, fallbackString: String? = null) {
-    val bukkitServer = server
-    val fallback = fallbackString ?: description.name
-    bukkitServer.getCommandMapOnNonPaperServers().register(fallback, command)
-
+    val fallback = fallbackString ?: name
+    server.getCommandMapOnNonPaperServers().register(fallback, command)
 }
 
 /**

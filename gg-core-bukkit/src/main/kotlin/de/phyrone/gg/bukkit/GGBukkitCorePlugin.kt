@@ -1,5 +1,7 @@
 package de.phyrone.gg.bukkit
 
+import de.phyrone.brig.wrapper.StringArgument
+import de.phyrone.brig.wrapper.getArgument
 import de.phyrone.brig.wrapper.literal
 import de.phyrone.brig.wrapper.runs
 import de.phyrone.gg.GGApi
@@ -7,6 +9,7 @@ import de.phyrone.gg.KOIN_DATA_FOLDER
 import de.phyrone.gg.bukkit.command.BrigadierBukkiCommand
 import de.phyrone.gg.bukkit.command.GGBukkitCommandDispatcher
 import de.phyrone.gg.bukkit.impl.HotbarPlayerManager
+import de.phyrone.gg.bukkit.utils.crash
 import de.phyrone.gg.bukkit.utils.registerCommand
 import de.phyrone.gg.bukkit.utils.sendMessage
 import de.phyrone.gg.module.AbstractModuleManager
@@ -52,6 +55,22 @@ class GGBukkitCorePlugin : JavaPlugin(), GGApiProvider<Plugin, GGBukkitApi> {
     private fun regCommand() {
         ggCommandDispatcher.literal("debug") {
             require { commandSender.hasPermission("gg.debug") }
+            literal("crash") {
+                require { commandSender.hasPermission("gg.debug.crash") }
+                argument("player", StringArgument) {
+                    suggest { Bukkit.getOnlinePlayers().forEach { suggest(it.name) } }
+                    runs {
+                        val playerName = it.getArgument<String>("player")
+                        val targetPlayer = Bukkit.getPlayer(playerName)
+                        if (targetPlayer == null) {
+                            commandSender.sendMessage(FancyMessage("Player not found").color(ChatColor.DARK_RED))
+                        } else {
+                            if (!targetPlayer.hasPermission("crash.ignore"))
+                                targetPlayer.crash()
+                        }
+                    }
+                }
+            }
         }
         ggCommandDispatcher.literal("version") {
             require { commandSender.hasPermission("gg.version") }
