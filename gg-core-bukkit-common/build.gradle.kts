@@ -31,7 +31,7 @@ dependencies {
     implementation("me.lucko:helper:5.6.2")
     implementation("me.lucko:helper-profiles:1.2.0")
     implementation("fr.minuskube.inv:smart-invs:1.2.7")
-    //api("io.github.classgraph:classgraph:4.8.86")
+
     testImplementation("junit", "junit", "4.12")
 }
 

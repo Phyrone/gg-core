@@ -109,7 +109,7 @@ private class GGCoreApiImpl(
     private val koin by lazy { koinApp.koin }
     override val moduleManager: ModuleManager by lazy {
         GGCoreModuleManagerImpl(
-            corePlugin.executorService ?: error("could not load thread pool for start! is the core working?")
+            corePlugin.executorService ?: error("could not load thread pool for start! is the core enabled?")
         )
     }
 

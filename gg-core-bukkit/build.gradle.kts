@@ -19,6 +19,7 @@ dependencies {
     implementation(kotlin("stdlib-jdk8"))
     implementation(project(":gg-core-bukkit-common"))
     implementation(project(":gg-core-common"))
+    implementation("me.lucko:commodore:1.5")
     testImplementation("junit", "junit", "4.12")
 }
 
