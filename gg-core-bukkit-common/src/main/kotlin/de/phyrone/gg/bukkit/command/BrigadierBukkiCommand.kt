@@ -66,9 +66,7 @@ class BrigadierBukkiCommand @JvmOverloads constructor(
     ): List<String> {
         val parsed = parse(sender, alias, args)
         val suggestions = commandDispatcher.getCompletionSuggestions(parsed).get()
-        return if (suggestions.isEmpty)
-            super.tabComplete(sender, alias, args, location)
-        else suggestions.list.map { suggestion -> suggestion.text }
+        return suggestions.list.map { suggestion -> suggestion.text }
     }
 
     object DefaultHelpCommandHandler : HelpCommandHandler {
