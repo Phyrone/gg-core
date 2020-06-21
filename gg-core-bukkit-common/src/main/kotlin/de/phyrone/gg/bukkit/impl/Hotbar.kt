@@ -43,12 +43,13 @@ class HotbarPlayerManager(private val plugin: Plugin) : Listener {
     @EventHandler(ignoreCancelled = true)
     private fun onInvClick(event: InventoryClickEvent) {
         val inv = event.inventory
+        val player = (event.whoClicked as? Player) ?: return
         when (inv.type) {
             InventoryType.PLAYER, InventoryType.CREATIVE, InventoryType.CRAFTING -> {
                 if (event.slot in (0..8)) {
                     event.isCancelled = true
-                    if ((event.whoClicked as? Player)?.gameMode == GameMode.CREATIVE)
-                        event.currentItem = null
+                    if (player.gameMode == GameMode.CREATIVE)
+                        event.view.cursor = null
                 }
             }
             else -> return
