@@ -7,6 +7,7 @@ import fr.mrmicky.fastparticle.ParticleType
 import mkremins.fanciful.FancyMessage
 import net.md_5.bungee.api.chat.BaseComponent
 import net.md_5.bungee.chat.ComponentSerializer
+import org.bukkit.Location
 import org.bukkit.Server
 import org.bukkit.command.CommandMap
 import org.bukkit.command.CommandSender
@@ -90,4 +91,9 @@ private fun <T : Entity> getTarget(
         }
     }
     return target?.takeUnless { entity.location.distance(it.location) > maxDistance }
+}
+
+@JvmOverloads
+fun Player.playSound(location: Location, sound: UniversalSound, volume: Float = 1.0F, pitch: Float = 0.0F) {
+    playSound(location, sound.bukkitSound, volume, pitch)
 }
