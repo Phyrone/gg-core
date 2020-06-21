@@ -14,16 +14,9 @@ pipeline {
 
         stage('Archive') {
             steps {
-                parallel('Publish': {
-                    withCredentials([usernamePassword(credentialsId: 'admin-nexus-repo-phyrone-de', usernameVariable: 'REPO_USER', passwordVariable: 'REPO_PASSWORD')]) {
-                        sh 'gradle publish'
-                    }
-                }, 'Archive': {
-                    archiveArtifacts(artifacts: 'build/libs/*.jar')
-                })
+                archiveArtifacts(artifacts: 'build/libs/*.jar')
             }
         }
-
     }
     tools {
         jdk 'oraclejdk8'
