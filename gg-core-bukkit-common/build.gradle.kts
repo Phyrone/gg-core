@@ -31,7 +31,8 @@ dependencies {
     implementation("me.lucko:helper:5.6.2")
     implementation("me.lucko:helper-profiles:1.2.0")
     implementation("fr.minuskube.inv:smart-invs:1.2.7")
-
+    implementation("com.github.InventivetalentDev:ReflectionHelper:1.14.8-SNAPSHOT")
+    implementation("com.github.InventivetalentDev.SpigetUpdater:bukkit:1.4.2-SNAPSHOT")
     testImplementation("junit", "junit", "4.12")
 }
 

@@ -21,7 +21,7 @@ repositories {
 }
 allprojects {
 
-repositories {
+    repositories {
         spigot()
         paper()
         bungeecord()
@@ -34,6 +34,7 @@ repositories {
         maven("https://libraries.minecraft.net")
         maven("https://raw.github.com/rjenkinsjr/maven2/repo")
         maven("https://oss.sonatype.org/content/groups/public/")
+        maven("https://repo.inventivetalent.org/content/groups/public/")
         maven("https://dl.cloudsmith.io/public/anand-beh/arim-repo/maven/")
 
     }
