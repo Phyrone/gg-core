@@ -13,7 +13,9 @@ pipeline {
         }
 
         stage('Archive') {
-            archiveArtifacts(artifacts: 'build/libs/*.jar')
+            steps {
+                archiveArtifacts(artifacts: 'build/libs/*.jar')
+            }
         }
     }
     tools {
