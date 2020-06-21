@@ -2,6 +2,7 @@ import kr.entree.spigradle.kotlin.spigot
 
 plugins {
     java
+    maven
     kotlin("jvm")
     id("kr.entree.spigradle")
     id("org.jetbrains.dokka")

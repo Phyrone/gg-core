@@ -1,5 +1,6 @@
 plugins {
     java
+    maven
     kotlin("jvm")
     id("org.jetbrains.dokka")
 }
