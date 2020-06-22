@@ -20,7 +20,7 @@ import java.io.Closeable
 import java.util.logging.Logger
 import javax.sql.DataSource
 
-open class DatabaseModule(koin: Koin, val configSpec: DatabaseConfigSpec) : DefaultGGModule(koin) {
+open class DatabaseModule(koin: Koin) : DefaultGGModule(koin) {
     private val config by inject<Konf>(named(KOIN_CONFIG_MAIN))
     private val koinApplication by inject<KoinApplication>()
     private val logger by inject<Logger>()
@@ -48,7 +48,7 @@ open class DatabaseModule(koin: Koin, val configSpec: DatabaseConfigSpec) : Defa
 
     @Suppress("NOTHING_TO_INLINE")
     private inline fun loadDataSource(): DataSource {
-        val providerName = config[configSpec.provider].toLowerCase()
+        val providerName = config[DatabaseConfigSpec.provider].toLowerCase()
         val provider = providers.getOrElse(providerName) {
             logger.warning("Database provider " + providerName + "not fround -> fall back to h2")
             fallbackProvider
