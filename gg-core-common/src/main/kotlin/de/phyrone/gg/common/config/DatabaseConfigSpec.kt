@@ -16,10 +16,10 @@ object DatabaseConfigSpec : ConfigSpec("database") {
 
 
     object Pool : ConfigSpec("pool") {
-        val minimumIdle by optional(2, "minimum-idle")
+        val min by optional(2, "minimum-idle")
         val max by optional(10, "maximum-pool-size")
-        val maximumLifetime by optional(1800000, "maximum-lifetime")
-        val connectionTimeout by optional(5000, "connection-timeout")
+        val maximumLifetime by optional(1800000L, "maximum-lifetime")
+        val connectionTimeout by optional(5000L, "connection-timeout")
 
     }
 

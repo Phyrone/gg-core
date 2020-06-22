@@ -6,6 +6,7 @@ import de.phyrone.brig.wrapper.literal
 import de.phyrone.brig.wrapper.runs
 import de.phyrone.gg.GGApi
 import de.phyrone.gg.KOIN_FOLDER_DATA
+import de.phyrone.gg.KOIN_PLUGIN_NAME
 import de.phyrone.gg.bukkit.command.BrigadierBukkiCommand
 import de.phyrone.gg.bukkit.command.GGBukkitCommandDispatcher
 import de.phyrone.gg.bukkit.impl.HotbarPlayerManager
@@ -116,7 +117,8 @@ private class GGCoreApiImpl(
                 single<Koin>(override = true) { this@startKoin.koin }
                 single<GGBukkitApi> { this@GGCoreApiImpl }
                 single<GGApi> { this@GGCoreApiImpl }
-                single<Plugin> { targetPlugin }
+                single { targetPlugin }
+                single(named(KOIN_PLUGIN_NAME), createdAtStart = true, override = true) { targetPlugin.name }
                 single { Bukkit.getScheduler() }
                 single { Bukkit.getConsoleSender() }
                 single { Bukkit.getScoreboardManager() }

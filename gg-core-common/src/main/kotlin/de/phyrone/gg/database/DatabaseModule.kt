@@ -4,7 +4,9 @@ import de.phyrone.gg.KOIN_CONFIG_MAIN
 import de.phyrone.gg.common.config.DatabaseConfigSpec
 import de.phyrone.gg.common.config.Konf
 import de.phyrone.gg.database.provider.DatasourceProvider
-import de.phyrone.gg.database.provider.H2LocalDatabaseProvider
+import de.phyrone.gg.database.provider.H2FileDatabaseProvider
+import de.phyrone.gg.database.provider.H2MemDatabaseProvider
+import de.phyrone.gg.database.provider.MySQLDatabaseProvider
 import de.phyrone.gg.module.DefaultGGModule
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.Transaction
@@ -22,8 +24,8 @@ open class DatabaseModule(koin: Koin, val configSpec: DatabaseConfigSpec) : Defa
     private val config by inject<Konf>(named(KOIN_CONFIG_MAIN))
     private val koinApplication by inject<KoinApplication>()
     private val logger by inject<Logger>()
-    private val fallbackProvider = H2LocalDatabaseProvider
-    private val providers = mapOf<String, DatasourceProvider>()
+    private val fallbackProvider = H2FileDatabaseProvider
+
     private var datasource: DataSource? = null
     final override fun onEnable() {
         initDatabase()
@@ -44,7 +46,8 @@ open class DatabaseModule(koin: Koin, val configSpec: DatabaseConfigSpec) : Defa
 
     open fun Transaction.onDatabaseStart() {}
 
-    private fun loadDataSource(): DataSource {
+    @Suppress("NOTHING_TO_INLINE")
+    private inline fun loadDataSource(): DataSource {
         val providerName = config[configSpec.provider].toLowerCase()
         val provider = providers.getOrElse(providerName) {
             logger.warning("Database provider " + providerName + "not fround -> fall back to h2")
@@ -68,5 +71,16 @@ open class DatabaseModule(koin: Koin, val configSpec: DatabaseConfigSpec) : Defa
         datasource = null
     }
 
+    companion object Static {
+        private val providers = HashMap<String, DatasourceProvider>()
+
+        init {
+            listOf(H2FileDatabaseProvider, H2MemDatabaseProvider, MySQLDatabaseProvider).forEach { provider ->
+                provider.names.forEach { name ->
+                    providers[name.toLowerCase().trim()] = provider
+                }
+            }
+        }
+    }
 
 }

@@ -2,9 +2,11 @@ package de.phyrone.gg.database.provider
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
+import de.phyrone.gg.KOIN_PLUGIN_NAME
 import de.phyrone.gg.common.config.DatabaseConfigSpec
 import de.phyrone.gg.common.config.Konf
 import org.koin.core.Koin
+import org.koin.core.qualifier.named
 import javax.sql.DataSource
 
 abstract class AbstractHikariProvider : DatasourceProvider {
@@ -28,7 +30,12 @@ abstract class AbstractHikariProvider : DatasourceProvider {
         if (driver != null) {
             hikariConfig.driverClassName = driver
         }
-        //TODO("implement pool settings")
+        hikariConfig.minimumIdle = config[DatabaseConfigSpec.Pool.min].coerceAtLeast(0)
+        hikariConfig.maximumPoolSize =
+            config[DatabaseConfigSpec.Pool.max].coerceAtLeast(1).coerceAtLeast(hikariConfig.minimumIdle)
+        hikariConfig.connectionTimeout = config[DatabaseConfigSpec.Pool.connectionTimeout].coerceAtLeast(0)
+        hikariConfig.maxLifetime = config[DatabaseConfigSpec.Pool.maximumLifetime].coerceAtLeast(0)
+        hikariConfig.poolName = koin.get(named(KOIN_PLUGIN_NAME))
         hikariConfig.override()
         return HikariDataSource(hikariConfig)
     }
