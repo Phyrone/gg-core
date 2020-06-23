@@ -53,8 +53,10 @@ publishing {
         maven {
             setUrl(
                 if ((version as String).endsWith("-SNAPSHOT"))
-                    publishProperties["repo.url.snapshot"] as String else
-                    publishProperties["repo.url.release"] as String
+                    publishProperties["repo.url.snapshot"] as? String
+                        ?: "https://repo.phyrone.de/repository/maven-release/" else
+                    publishProperties["repo.url.release"] as? String
+                        ?: "https://repo.phyrone.de/repository/maven-release/"
             )
             credentials {
                 username = (publishProperties["repo.username"] as? String) ?: System.getenv("REPO_USER")
