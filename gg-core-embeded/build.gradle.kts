@@ -40,7 +40,6 @@ tasks {
 configure<JavaPluginConvention> {
     sourceCompatibility = JavaVersion.VERSION_1_8
 }
-
 val publishPropertiesFile = File("./publish.properties")
 val publishProperties by lazy {
     Properties().also { publishProperties ->
@@ -49,13 +48,13 @@ val publishProperties by lazy {
         }
     }
 }
-publishing{
+publishing {
     repositories {
         maven {
             setUrl(
                 if ((version as String).endsWith("-SNAPSHOT"))
-                    "https://repo.phyrone.de/repository/maven-snapshot/" else
-                    "https://repo.phyrone.de/repository/maven-release/"
+                    publishProperties["repo.url.snapshot"] as String else
+                    publishProperties["repo.url.release"] as String
             )
             credentials {
                 username = (publishProperties["repo.username"] as? String) ?: System.getenv("REPO_USER")
@@ -63,13 +62,12 @@ publishing{
             }
         }
     }
-    publications{
+    publications {
         register("embeded", MavenPublication::class.java) {
             from(components.getByName("java"))
 
             //shadow.component(this)
             //artifact(project(":gg-core-embeded").tasks.getByName("shadowJar"))
-            artifactId = "gg-core-embedded"
             pom {
                 developers {
                     developer {
@@ -83,3 +81,4 @@ publishing{
     }
 
 }
+

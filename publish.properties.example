@@ -1,2 +1,4 @@
-repo.username=""
-repo.password=""
+repo.username=
+repo.password=
+repo.url.snapshot=https://repo.phyrone.de/repository/maven-snapshot/
+repo.url.release=https://repo.phyrone.de/repository/maven-release/

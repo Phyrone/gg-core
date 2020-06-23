@@ -1,8 +1,11 @@
 import kr.entree.spigradle.kotlin.spigot
+import java.io.FileInputStream
+import java.util.*
 
 plugins {
     java
     maven
+    `maven-publish`
     kotlin("jvm")
     id("kr.entree.spigradle")
     id("org.jetbrains.dokka")
@@ -38,5 +41,46 @@ tasks {
 spigot {
     name = "GG-Core"
     apiVersion = "1.13"
+
+}
+val publishPropertiesFile = File("./publish.properties")
+val publishProperties by lazy {
+    Properties().also { publishProperties ->
+        if (publishPropertiesFile.exists()) {
+            publishProperties.load(FileInputStream(publishPropertiesFile))
+        }
+    }
+}
+publishing {
+    repositories {
+        maven {
+            setUrl(
+                if ((version as String).endsWith("-SNAPSHOT"))
+                    publishProperties["repo.url.snapshot"] as String else
+                    publishProperties["repo.url.release"] as String
+            )
+            credentials {
+                username = (publishProperties["repo.username"] as? String) ?: System.getenv("REPO_USER")
+                password = (publishProperties["repo.password"] as? String) ?: System.getenv("REPO_PASSWORD")
+            }
+        }
+    }
+    publications {
+        register("bukkit", MavenPublication::class.java) {
+            from(components.getByName("java"))
+
+            //shadow.component(this)
+            //artifact(project(":gg-core-embeded").tasks.getByName("shadowJar"))
+            pom {
+                developers {
+                    developer {
+                        id.set("Phyrone")
+                        name.set("Samuel Lauqa")
+                        email.set("phyrone@phyrone.de")
+                    }
+                }
+            }
+        }
+    }
 
 }

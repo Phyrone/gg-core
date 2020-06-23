@@ -14,7 +14,15 @@ pipeline {
 
         stage('Archive') {
             steps {
+
                 archiveArtifacts(artifacts: 'build/libs/*.jar')
+                parallel('Publish': {
+                    withCredentials([usernamePassword(credentialsId: 'admin-nexus-repo-phyrone-de', usernameVariable: 'REPO_USER', passwordVariable: 'REPO_PASSWORD')]) {
+                        sh 'gradle publish'
+                    }
+                }, 'Archive': {
+                    archiveArtifacts(artifacts: 'build/libs/*.jar')
+                })
             }
         }
     }
