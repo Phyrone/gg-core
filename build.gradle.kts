@@ -44,9 +44,9 @@ allprojects {
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
     testImplementation("junit", "junit", "4.12")
-    implementation(project(":gg-core-common"))
-    implementation(project(":gg-core-bukkit"))
-    implementation(project(":gg-core-bukkit-common"))
+    api(project(":gg-core-common"))
+    api(project(":gg-core-bukkit"))
+    api(project(":gg-core-bukkit-common"))
     compileOnly(spigot())
     compileOnly(bungeecord())
 }

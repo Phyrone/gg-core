@@ -23,17 +23,17 @@ dependencies {
     implementation(project(":gg-core-common"))
     implementation(kotlin("stdlib-jdk8"))
 
-    implementation("com.github.Phyrone:universalitems:4ca58b7d99")
-    implementation("fr.mrmicky:FastParticles:v1.2.3")
+    api("com.github.Phyrone:universalitems:4ca58b7d99")
+    api("fr.mrmicky:FastParticles:v1.2.3")
 
-    implementation("com.github.deanveloper:SkullCreator:3b59220bc2")
-    implementation("com.github.tr7zw.Item-NBT-API:item-nbt-api:2.3.1")
-    implementation("fr.mrmicky:FastBoard:1.1.0")
-    implementation("me.lucko:helper:5.6.2")
-    implementation("me.lucko:helper-profiles:1.2.0")
-    implementation("fr.minuskube.inv:smart-invs:1.2.7")
-    implementation("com.github.InventivetalentDev:ReflectionHelper:1.14.8-SNAPSHOT")
-    implementation("com.github.InventivetalentDev.SpigetUpdater:bukkit:1.4.2-SNAPSHOT")
+    api("com.github.deanveloper:SkullCreator:3b59220bc2")
+    api("com.github.tr7zw.Item-NBT-API:item-nbt-api:2.3.1")
+    api("fr.mrmicky:FastBoard:1.1.0")
+    api("me.lucko:helper:5.6.2")
+    api("me.lucko:helper-profiles:1.2.0")
+    api("fr.minuskube.inv:smart-invs:1.2.7")
+    api("com.github.InventivetalentDev:ReflectionHelper:1.14.8-SNAPSHOT")
+    api("com.github.InventivetalentDev.SpigetUpdater:bukkit:1.4.2-SNAPSHOT")
     testImplementation("junit", "junit", "4.12")
 }
 

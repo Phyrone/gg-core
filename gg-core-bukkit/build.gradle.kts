@@ -18,9 +18,9 @@ repositories {
 dependencies {
     compileOnly(spigot())
     implementation(kotlin("stdlib-jdk8"))
-    implementation(project(":gg-core-bukkit-common"))
-    implementation(project(":gg-core-common"))
-    implementation("me.lucko:commodore:1.5")
+    api(project(":gg-core-bukkit-common"))
+    api(project(":gg-core-common"))
+    api("me.lucko:commodore:1.5")
     testImplementation("junit", "junit", "4.12")
 }
 
