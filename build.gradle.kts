@@ -46,6 +46,7 @@ allprojects {
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
+    implementation(kotlin("reflect"))
     testImplementation("junit", "junit", "4.12")
     api(project(":gg-core-common"))
     api(project(":gg-core-bukkit"))
