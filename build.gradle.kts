@@ -91,9 +91,9 @@ tasks {
             this.exclude(dependency("org.yaml:snakeyaml"))
         }
         exclude(
-            "**/*.kotlin_metadata",
-            "**/*.kotlin_module",
-            "**/*.kotlin_builtins",
+            //"**/*.kotlin_metadata",
+            //"**/*.kotlin_module",
+            //"**/*.kotlin_builtins",
             "META-INF/maven/**",
             "META-INF/versions/**",
             "META-INF/proguard/**",
