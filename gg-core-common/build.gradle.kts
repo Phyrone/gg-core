@@ -73,7 +73,7 @@ publishing {
             setUrl(
                 if ((version as String).endsWith("-SNAPSHOT"))
                     publishProperties["repo.url.snapshot"] as? String
-                        ?: "https://repo.phyrone.de/repository/maven-release/" else
+                        ?: "https://repo.phyrone.de/repository/maven-snapshot/" else
                     publishProperties["repo.url.release"] as? String
                         ?: "https://repo.phyrone.de/repository/maven-release/"
             )
