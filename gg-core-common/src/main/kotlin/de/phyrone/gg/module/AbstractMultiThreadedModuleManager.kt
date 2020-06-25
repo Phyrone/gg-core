@@ -3,13 +3,16 @@ package de.phyrone.gg.module
 import com.google.common.collect.Sets
 import de.phyrone.gg.module.annotations.ModuleDependencies
 import de.phyrone.gg.module.annotations.ModuleName
+import org.apache.http.annotation.Experimental
 import java.io.Closeable
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.jvm.jvmName
 
-abstract class AbstractModuleManager(private var executor: ExecutorService) : Closeable {
+@Experimental
+abstract class AbstractMultiThreadedModuleManager(private var executor: ExecutorService) : Closeable,
+    WrappedModuleManager {
     private val moduleActionLock = Object()
 
     //im too bad to use wait notify
@@ -19,7 +22,7 @@ abstract class AbstractModuleManager(private var executor: ExecutorService) : Cl
         find { moduleWrapper -> moduleWrapper.name.equals(name, true) }
 
     private val notifyMap = HashMap<ModuleWrapper, List<ModuleWrapper>>()
-    abstract fun getModules(): List<GGModule>
+
 
     private fun buildModuleList(): List<ModuleWrapper> = getModules().map { module ->
         val name = module::class.findAnnotation<ModuleName>()?.name ?: module::class.simpleName ?: module::class.jvmName
@@ -93,15 +96,15 @@ abstract class AbstractModuleManager(private var executor: ExecutorService) : Cl
     private fun allModuleStatusReached(targetStatus: ModuleStatus) = taskDoneSet.size == moduleWrappers.size
 
 
-    fun enableModules() {
+    override fun onEnable() {
         pushStatus(ModuleStatus.ENABLED)
     }
 
-    fun disableModules() {
+    override fun onDisable() {
         pushStatus(ModuleStatus.DISABLED)
     }
 
-    fun reloadModules() {
+    override fun onReload() {
         pushStatus(ModuleStatus.RELOAD)
     }
 

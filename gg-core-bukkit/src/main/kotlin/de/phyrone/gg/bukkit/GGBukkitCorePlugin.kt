@@ -13,10 +13,10 @@ import de.phyrone.gg.bukkit.impl.HotbarPlayerManager
 import de.phyrone.gg.bukkit.utils.crash
 import de.phyrone.gg.bukkit.utils.registerCommand
 import de.phyrone.gg.bukkit.utils.sendMessage
-import de.phyrone.gg.module.AbstractModuleManager
+import de.phyrone.gg.module.AbstractLinearModuleManager
 import de.phyrone.gg.module.GGApiProvider
 import de.phyrone.gg.module.GGModule
-import de.phyrone.gg.module.ModuleManager
+import de.phyrone.gg.module.ModuleManagerApi
 import mkremins.fanciful.FancyMessage
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
@@ -29,8 +29,6 @@ import org.koin.core.context.startKoin
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import java.util.*
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
 import java.util.function.Supplier
 
 private typealias PluginMarker = kr.entree.spigradle.Plugin
@@ -39,7 +37,6 @@ private typealias PluginMarker = kr.entree.spigradle.Plugin
 class GGBukkitCorePlugin : JavaPlugin(), GGApiProvider<Plugin, GGBukkitApi> {
 
     private val apiMap = WeakHashMap<Plugin, GGCoreApiImpl>()
-    internal var executorService: ExecutorService? = null
     override fun getApi(target: Plugin): GGBukkitApi = apiMap[target] ?: GGCoreApiImpl(target, this).also { api ->
         apiMap[target] = api
     }
@@ -48,8 +45,6 @@ class GGBukkitCorePlugin : JavaPlugin(), GGApiProvider<Plugin, GGBukkitApi> {
 
     private val ggCommandDispatcher = GGBukkitCommandDispatcher()
     override fun onEnable() {
-        executorService?.shutdown()
-        executorService = Executors.newCachedThreadPool()
         regCommand()
     }
 
@@ -94,8 +89,6 @@ class GGBukkitCorePlugin : JavaPlugin(), GGApiProvider<Plugin, GGBukkitApi> {
     }
 
     override fun onDisable() {
-        executorService?.shutdown()
-        executorService = null
     }
 
     companion object Static {
@@ -128,33 +121,16 @@ private class GGCoreApiImpl(
         }
     }
     private val koin by lazy { koinApp.koin }
-    override val moduleManager: ModuleManager by lazy {
-        GGCoreModuleManagerImpl(
-            corePlugin.executorService ?: error("could not load thread pool for start! is the core enabled?")
-        )
+    override val moduleManager: ModuleManagerApi by lazy {
+        GGCoreModuleManagerImpl()
     }
 
-    private inner class GGCoreModuleManagerImpl(
-        executorService: ExecutorService
-    ) : ModuleManager, AbstractModuleManager(executorService) {
+    private inner class GGCoreModuleManagerImpl : ModuleManagerApi, AbstractLinearModuleManager() {
 
         lateinit var getModulesHandler: Supplier<List<Class<out GGModule>>>
         override fun getModuleHandler(getModulesHandler: Supplier<List<Class<out GGModule>>>) {
             this.getModulesHandler = getModulesHandler
         }
-
-        override fun onEnable() {
-            enableModules()
-        }
-
-        override fun onReload() {
-            reloadModules()
-        }
-
-        override fun onDisable() {
-            disableModules()
-        }
-
 
         override fun getModules(): List<GGModule> = getModulesHandler.get()
             .map { moduleClass ->

@@ -1,5 +1,5 @@
+import de.phyrone.gg.module.AbstractMultiThreadedModuleManager
 import de.phyrone.gg.module.GGModule
-import de.phyrone.gg.module.AbstractModuleManager
 import de.phyrone.gg.module.annotations.ModuleDependencies
 import de.phyrone.gg.module.annotations.ModuleName
 import org.junit.Test
@@ -12,20 +12,20 @@ class ModuleLoaderTest {
         val moduleLoader = TestModuleManager()
 
         println("Enable Modules")
-        moduleLoader.enableModules()
+        moduleLoader.onEnable()
 
         println("Reload Modules")
-        moduleLoader.reloadModules()
+        moduleLoader.onReload()
 
         println("Reload Modules Again")
-        moduleLoader.reloadModules()
+        moduleLoader.onReload()
 
         println("Disable Modules")
-        moduleLoader.disableModules()
+        moduleLoader.onDisable()
     }
 }
 
-class TestModuleManager : AbstractModuleManager(Executors.newFixedThreadPool(4)) {
+class TestModuleManager : AbstractMultiThreadedModuleManager(Executors.newFixedThreadPool(4)) {
     override fun getModules() = listOf(
         TestModuleA,
         TestModuleB,
@@ -61,17 +61,18 @@ open class TestModule(private val name: String) : GGModule {
 
     override fun onDisable() {
         println("Disable $name ${Thread.currentThread().name}")
-  //      workHard(500)
+        //      workHard(500)
     }
 
     override fun onReload() {
         println("Reload $name ${Thread.currentThread().name}")
-    //    workHard(1000)
+        //    workHard(1000)
     }
 
     private fun workHard(time: Long) {
         val finishTime = System.currentTimeMillis() + time
         while (System.currentTimeMillis() < finishTime) {
+            //äh yes a realy hard job to do
             1 + 1
         }
     }
