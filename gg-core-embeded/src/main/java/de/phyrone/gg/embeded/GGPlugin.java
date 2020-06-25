@@ -1,8 +1,8 @@
 package de.phyrone.gg.embeded;
 
 import de.phyrone.gg.GGCore;
+import de.phyrone.gg.module.ApiModuleManager;
 import de.phyrone.gg.module.GGModule;
-import de.phyrone.gg.module.ModuleManager;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.InvalidDescriptionException;
 import org.bukkit.plugin.InvalidPluginException;
@@ -37,7 +37,7 @@ public abstract class GGPlugin extends JavaPlugin {
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
-        ModuleManager moduleManager = GGCore.getInstance(this).getModuleManager();
+        ApiModuleManager moduleManager = GGCore.getInstance(this).getModuleManager();
         moduleManager.getModuleHandler(this::getModules);
         moduleManager.onEnable();
         enable();

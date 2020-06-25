@@ -1,7 +1,7 @@
 package de.phyrone.gg
 
-import de.phyrone.gg.module.ModuleManagerApi
+import de.phyrone.gg.module.ApiModuleManager
 
 interface GGApi {
-    val moduleManager: ModuleManagerApi
+    val moduleManager: ApiModuleManager
 }

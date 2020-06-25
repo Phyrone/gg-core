@@ -14,9 +14,9 @@ import de.phyrone.gg.bukkit.utils.crash
 import de.phyrone.gg.bukkit.utils.registerCommand
 import de.phyrone.gg.bukkit.utils.sendMessage
 import de.phyrone.gg.module.AbstractLinearModuleManager
+import de.phyrone.gg.module.ApiModuleManager
 import de.phyrone.gg.module.GGApiProvider
 import de.phyrone.gg.module.GGModule
-import de.phyrone.gg.module.ModuleManagerApi
 import mkremins.fanciful.FancyMessage
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
@@ -121,11 +121,11 @@ private class GGCoreApiImpl(
         }
     }
     private val koin by lazy { koinApp.koin }
-    override val moduleManager: ModuleManagerApi by lazy {
-        GGCoreModuleManagerImpl()
+    override val moduleManager: ApiModuleManager by lazy {
+        GGCoreImplModuleManager()
     }
 
-    private inner class GGCoreModuleManagerImpl : ModuleManagerApi, AbstractLinearModuleManager() {
+    private inner class GGCoreImplModuleManager : ApiModuleManager, AbstractLinearModuleManager() {
 
         lateinit var getModulesHandler: Supplier<List<Class<out GGModule>>>
         override fun getModuleHandler(getModulesHandler: Supplier<List<Class<out GGModule>>>) {

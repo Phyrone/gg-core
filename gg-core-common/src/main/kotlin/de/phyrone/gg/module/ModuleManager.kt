@@ -13,6 +13,6 @@ interface WrappedModuleManager : ModuleManager {
     fun getModules(): List<GGModule>
 }
 
-interface ModuleManagerApi : ModuleManager {
+interface ApiModuleManager : ModuleManager {
     fun getModuleHandler(getModulesHandler: Supplier<List<Class<out GGModule>>>)
 }
