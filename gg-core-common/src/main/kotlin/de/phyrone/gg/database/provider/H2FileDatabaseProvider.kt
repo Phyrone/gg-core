@@ -10,6 +10,7 @@ import org.koin.core.qualifier.named
 import java.io.File
 
 object H2FileDatabaseProvider : AbstractHikariProvider() {
+    override val driver: String = "org.h2.Driver"
     override fun getURL(config: Konf, koin: Koin): String {
         return "jdbc:h2:file:${koin.get<File>(named(KOIN_FOLDER_DATA)).absolutePath}${File.separator}" +
                 (config[DatabaseConfigSpec.database].takeUnless { it.isNotBlank() }

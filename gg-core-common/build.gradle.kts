@@ -45,6 +45,7 @@ dependencies {
     listOf("exposed-core", "exposed-dao", "exposed-jdbc", "exposed-java-time", "exposed-jodatime").forEach { name ->
         api("org.jetbrains.exposed", name, "0.24.1")
     }
+    implementation("com.h2database:h2:1.4.200")
 
 }
 

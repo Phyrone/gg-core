@@ -7,6 +7,7 @@ import org.koin.core.Koin
 import org.koin.core.qualifier.named
 
 object H2MemDatabaseProvider : AbstractHikariProvider() {
+    override val driver: String = "org.h2.Driver"
     override fun getURL(config: Konf, koin: Koin): String {
         return "jdbc:h2:mem:${koin.get<String>(named(KOIN_PLUGIN_NAME))};DB_CLOSE_DELAY=-1"
     }
