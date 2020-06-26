@@ -1,6 +1,7 @@
 package de.phyrone.gg.bukkit.impl
 
 import de.phyrone.gg.bukkit.hotbar.PlayerHotbar
+import de.phyrone.gg.bukkit.hotbar.template.HotbarTemplate
 import de.phyrone.gg.bukkit.items.*
 import de.phyrone.gg.bukkit.utils.getTargetEntitySafe
 import de.tr7zw.changeme.nbtapi.NBTItem
@@ -75,14 +76,15 @@ class HotbarPlayerManager(private val plugin: Plugin) : Listener {
         }
         event.isCancelled = true
         val slot = NBTItem(event.item ?: return).getInteger(HB_ITEM_SLOT_NBT_TAG) ?: return
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, Runnable {
+            player.pushInteraction(
+                slot,
+                interaction,
+                event.player.isSneaking,
+                event.player.getTargetEntitySafe()
+            )
+        })
 
-
-        player.pushInteraction(
-            slot,
-            interaction,
-            event.player.isSneaking,
-            event.player.getTargetEntitySafe()
-        )
     }
 
     @EventHandler
@@ -90,24 +92,32 @@ class HotbarPlayerManager(private val plugin: Plugin) : Listener {
         val player = players[event.player] ?: return
         event.isCancelled = true
         val slot = NBTItem(event.itemDrop.itemStack).getInteger(HB_ITEM_SLOT_NBT_TAG) ?: return
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, Runnable {
+            player.pushInteraction(
+                slot,
+                Interactive.Interaction.DROP,
+                event.player.isSneaking,
+                event.player.getTargetEntitySafe()
+            )
+        })
 
-        player.pushInteraction(
-            slot,
-            Interactive.Interaction.DROP,
-            event.player.isSneaking,
-            event.player.getTargetEntitySafe()
-        )
     }
 
     @EventHandler
     private fun onSelect(event: PlayerItemHeldEvent) {
         val player = players[event.player] ?: return
-        player.pushInteraction(
-            event.newSlot,
-            Interactive.Interaction.HOVER,
-            event.player.isSneaking,
-            event.player.getTargetEntitySafe()
-        )
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, Runnable {
+            player.pushInteraction(
+                event.newSlot,
+                Interactive.Interaction.HOVER,
+                event.player.isSneaking,
+                event.player.getTargetEntitySafe()
+            )
+        })
+        when ((event.previousSlot - event.newSlot)) {
+            7, 8 -> player.next()
+            -7, -8 -> player.prev()
+        }
     }
 
     @EventHandler
@@ -117,12 +127,14 @@ class HotbarPlayerManager(private val plugin: Plugin) : Listener {
         val slot = NBTItem(event.offHandItem?.takeUnless { it.type == Material.AIR } ?: return).getInteger(
             HB_ITEM_SLOT_NBT_TAG
         ) ?: return
-        player.pushInteraction(
-            slot,
-            Interactive.Interaction.OFFHAND_SWAP,
-            event.player.isSneaking,
-            event.player.getTargetEntitySafe()
-        )
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, Runnable {
+            player.pushInteraction(
+                slot,
+                Interactive.Interaction.OFFHAND_SWAP,
+                event.player.isSneaking,
+                event.player.getTargetEntitySafe()
+            )
+        })
     }
 
 }
@@ -202,6 +214,15 @@ private class HotbarPlayerImpl(private val player: Player, private val plugin: P
         item.exec(player, target, type, shift)
     }
 
+    override fun clear() {
+        clear(true)
+    }
+
+    override fun clear(keepInteraction: Boolean) {
+        if (keepInteraction) clearSlots() else clearItems()
+    }
+
+
     @Suppress("NOTHING_TO_INLINE")
     private inline fun clearSlots() {
         Bukkit.getScheduler().runTask(plugin, Runnable {
@@ -210,6 +231,45 @@ private class HotbarPlayerImpl(private val player: Player, private val plugin: P
             }
         })
     }
+
+    private fun clearItems() {
+        Bukkit.getScheduler().runTask(plugin, Runnable {
+            repeat(9) { slot ->
+                setItemLater(slot, null)
+            }
+        })
+    }
+
+    override fun next() {
+        handleTemplateIfExist { next(player).reloadIfNeeded() }
+    }
+
+    override fun prev() {
+        handleTemplateIfExist { prev(player).reloadIfNeeded() }
+    }
+
+    @Suppress("NOTHING_TO_INLINE")
+    private inline fun Boolean.reloadIfNeeded() {
+        if (this) reloadTemplate()
+    }
+
+    private inline fun <T> handleTemplateIfExist(block: HotbarTemplate.() -> T): T? {
+        val template = template
+        return if (template != null) block.invoke(template) else null
+    }
+
+    override fun reloadTemplate() {
+        clearItems()
+        handleTemplateIfExist {
+            append(player)
+        }
+    }
+
+    override var template: HotbarTemplate? = null
+        set(value) {
+            field = value
+            reloadTemplate()
+        }
 
     fun deleted() {
         clearSlots()
