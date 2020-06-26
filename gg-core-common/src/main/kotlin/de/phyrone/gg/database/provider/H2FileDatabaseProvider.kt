@@ -14,7 +14,7 @@ object H2FileDatabaseProvider : AbstractHikariProvider() {
     override fun getURL(config: Konf, koin: Koin): String {
         return "jdbc:h2:file:${koin.get<File>(named(KOIN_FOLDER_DATA)).absolutePath}${File.separator}" +
                 (config[DatabaseConfigSpec.database].takeUnless { it.isBlank() }
-                    ?: koin.get(named(KOIN_PLUGIN_NAME)))
+                    ?: koin.get<String>(named(KOIN_PLUGIN_NAME)))
     }
 
     override fun HikariConfig.override() {
