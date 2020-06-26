@@ -16,10 +16,10 @@ private class SchedulerExecutor(private val plugin: Plugin, private val async: B
     }
 }
 
-private val syncSchedulerCoroutineCache = WeakHashMap<Plugin, SchedulerExecutor>()
-private val asyncSchedulerCoroutineCache = WeakHashMap<Plugin, SchedulerExecutor>()
+private val syncSchedulerCoroutineCache = WeakHashMap<Plugin, CoroutineDispatcher>()
+private val asyncSchedulerCoroutineCache = WeakHashMap<Plugin, CoroutineDispatcher>()
 
 @JvmOverloads
 fun BukkitScheduler.coroutineScope(plugin: Plugin, async: Boolean = true): CoroutineDispatcher =
     (if (async) asyncSchedulerCoroutineCache else syncSchedulerCoroutineCache)
-        .getOrPut(plugin) { SchedulerExecutor(plugin, async) }.asCoroutineDispatcher()
+        .getOrPut(plugin) { SchedulerExecutor(plugin, async).asCoroutineDispatcher() }

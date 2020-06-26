@@ -37,6 +37,7 @@ dependencies {
     api("fr.minuskube.inv:smart-invs:1.2.7")
     api("com.github.InventivetalentDev:ReflectionHelper:1.14.8-SNAPSHOT")
     api("com.github.InventivetalentDev.SpigetUpdater:bukkit:1.4.2-SNAPSHOT")
+    api("com.github.Slikey:EffectLib:828207171d")
     testImplementation("junit", "junit", "4.12")
 }
 

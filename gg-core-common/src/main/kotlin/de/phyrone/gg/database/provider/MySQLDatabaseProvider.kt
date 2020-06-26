@@ -10,7 +10,11 @@ object MySQLDatabaseProvider : AbstractHikariProvider() {
     override val driver: String? = "com.mysql.jdbc.Driver "
     override fun getURL(config: Konf, koin: Koin): String {
         return "jdbc:mysql://${config[DatabaseConfigSpec.hosts].joinToString(",") { hostAndPort -> "${hostAndPort.host}:${hostAndPort.port}" }}/" +
-                (config[DatabaseConfigSpec.database].takeUnless { it.isBlank() } ?: koin.get(named(KOIN_PLUGIN_NAME)))
+                (config[DatabaseConfigSpec.database].takeUnless { it.isBlank() } ?: koin.get<String>(
+                    named(
+                        KOIN_PLUGIN_NAME
+                    )
+                ))
     }
 
     override val names: Set<String> = setOf("mysql", "mariadb"/* TODO(add external mariadb provider) */)
