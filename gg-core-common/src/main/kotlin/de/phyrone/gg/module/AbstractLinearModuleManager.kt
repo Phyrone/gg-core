@@ -7,24 +7,7 @@ import kotlin.reflect.full.findAnnotation
 
 abstract class AbstractLinearModuleManager : WrappedModuleManager {
 
-    private val moduleList by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
-        getModules().map { module ->
-            ModuleWrapper(
-                module,
-                module.getName(),
-                module.getDependencies()
-            )
-        }.sortedWith(kotlin.Comparator { module1, module2 ->
-            when {
-                module2.dependencies.contains(module1.name) && module1.dependencies.contains(module2.name) -> throw IllegalStateException(
-                    "illgeal depdencies sort"
-                )
-                module2.dependencies.contains(module1.name) -> -1
-                module1.dependencies.contains(module2.name) -> 1
-                else -> 0
-            }
-        }).map { moduleWrapper -> moduleWrapper.module }
-    }
+    private val moduleList by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { getModules() }
 
     private fun GGModule.getName() =
         this::class.findAnnotation<ModuleName>()?.name ?: this::class.simpleName ?: UUID.randomUUID().toString()
