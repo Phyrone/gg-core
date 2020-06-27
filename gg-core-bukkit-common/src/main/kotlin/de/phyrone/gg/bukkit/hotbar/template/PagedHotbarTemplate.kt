@@ -97,7 +97,7 @@ open class PagedHotbarTemplate private constructor(
                 currentPage++
                 direction = Direction.NEXT
             }
-            onPageChange(oldPage, currentPage, direction)
+            onPageChange(player, oldPage, currentPage, direction)
             true
         } else {
             false
@@ -115,14 +115,14 @@ open class PagedHotbarTemplate private constructor(
                 currentPage--
                 direction = Direction.PREV
             }
-            onPageChange(oldPage, currentPage, direction)
+            onPageChange(player, oldPage, currentPage, direction)
             true
         } else {
             false
         }
     }
 
-    open fun onPageChange(oldPage: Int, newPage: Int, direction: Direction) {
+    open fun PlayerHotbar.onPageChange(player: Player, oldPage: Int, newPage: Int, direction: Direction) {
 
     }
 
