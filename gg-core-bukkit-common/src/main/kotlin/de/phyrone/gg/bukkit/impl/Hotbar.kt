@@ -233,11 +233,10 @@ private class HotbarPlayerImpl(private val player: Player, private val plugin: P
     }
 
     private fun clearItems() {
-        Bukkit.getScheduler().runTask(plugin, Runnable {
-            repeat(9) { slot ->
-                setItemLater(slot, null)
-            }
-        })
+        repeat(9) { slot ->
+            items[slot] = null
+        }
+        clearSlots()
     }
 
     override fun next() {
