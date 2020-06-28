@@ -11,11 +11,14 @@ open class PagedHotbarTemplate private constructor(
 
 
     private var currentPage = 0
-    private var firstExec = false
+    private var firstExec = true
 
     override fun PlayerHotbar.append(player: Player) {
-        if (firstExec)
+        if (firstExec) {
             onPageChange(player, currentPage, currentPage, Direction.INIT)
+            firstExec = false
+        }
+
         pages.getOrNull(currentPage)?.forEachIndexed { slot: Int, interactiveItem: InteractiveItem? ->
             if (interactiveItem != null)
                 this.setItem(slot, interactiveItem)
