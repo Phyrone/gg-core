@@ -10,9 +10,12 @@ open class PagedHotbarTemplate private constructor(
     constructor() : this(ArrayList())
 
 
-    var currentPage = 0
+    private var currentPage = 0
+    private var firstExec = false
 
     override fun PlayerHotbar.append(player: Player) {
+        if (firstExec)
+            onPageChange(player, currentPage, currentPage, Direction.INIT)
         pages.getOrNull(currentPage)?.forEachIndexed { slot: Int, interactiveItem: InteractiveItem? ->
             if (interactiveItem != null)
                 this.setItem(slot, interactiveItem)
@@ -130,7 +133,7 @@ open class PagedHotbarTemplate private constructor(
 
 
     enum class Direction {
-        NEXT, PREV, FIRST, LAST
+        NEXT, PREV, FIRST, LAST, INIT
     }
 
 }
