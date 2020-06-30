@@ -25,6 +25,8 @@ open class PagedHotbarTemplate private constructor(
         }
     }
 
+    fun pagesSize(): Int = pages.size
+
     fun setItem(slot: Int, item: InteractiveItem) {
         if (slot < 0) return
         val page = calculatePageNumber(slot)
