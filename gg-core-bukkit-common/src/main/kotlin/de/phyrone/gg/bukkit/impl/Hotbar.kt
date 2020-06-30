@@ -45,6 +45,7 @@ class HotbarPlayerManager(private val plugin: Plugin) : Listener {
     private fun onInvClick(event: InventoryClickEvent) {
         val inv = event.inventory
         val player = (event.whoClicked as? Player) ?: return
+        players[player] ?: return
         when (inv.type) {
             InventoryType.PLAYER, InventoryType.CREATIVE, InventoryType.CRAFTING -> {
                 if (event.slot in (0..8)) {
