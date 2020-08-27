@@ -27,7 +27,7 @@ dependencies {
     implementation(kotlin("stdlib-jdk8"))
 
     api("com.github.Phyrone:universalitems:4ca58b7d99")
-    api("fr.mrmicky:FastParticles:v1.2.3")
+    api("fr.mrmicky:FastParticles:1.2.4")
 
     api("com.github.deanveloper:SkullCreator:3b59220bc2")
     api("com.github.tr7zw.Item-NBT-API:item-nbt-api:2.5.0")
