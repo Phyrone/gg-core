@@ -8,7 +8,7 @@ plugins {
     maven
     `maven-publish`
     idea
-    id("kr.entree.spigradle") version "1.2.4"
+    id("kr.entree.spigradle") version "2.2.1"
     id("org.jetbrains.dokka") version "0.10.1"
     id("com.github.johnrengelman.shadow") version "5.2.0"
     id("de.undercouch.download") version "1.2"
