@@ -30,7 +30,7 @@ dependencies {
     api("fr.mrmicky:FastParticles:v1.2.3")
 
     api("com.github.deanveloper:SkullCreator:3b59220bc2")
-    api("com.github.tr7zw.Item-NBT-API:item-nbt-api:2.3.1")
+    api("com.github.tr7zw.Item-NBT-API:item-nbt-api:2.5.0")
     api("fr.mrmicky:FastBoard:1.1.0")
     api("me.lucko:helper:5.6.2")
     api("me.lucko:helper-profiles:1.2.0")
