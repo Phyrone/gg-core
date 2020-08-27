@@ -23,7 +23,7 @@ dependencies {
     testImplementation("junit", "junit", "4.12")
     compileOnly(spigot())
     compileOnly(bungeecord())
-    implementation("org.jetbrains:annotations:16.0.2")
+    implementation("org.jetbrains:annotations:20.0.0")
     compileOnly(project.rootProject)
     compileOnly(project(":gg-core-bukkit-common"))
     compileOnly(project(":gg-core-bukkit"))
