@@ -30,9 +30,7 @@ dependencies {
     compileOnly(project(":gg-core-common"))
 }
 tasks {
-    spigotPluginYaml {
-        enabled = false
-    }
+    //spigotPluginYaml { enabled = false }
     shadowJar {
         classifier = null
     }

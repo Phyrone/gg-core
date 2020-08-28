@@ -12,7 +12,7 @@ plugins {
     id("org.jetbrains.dokka") version "0.10.1"
     id("com.github.johnrengelman.shadow") version "5.2.0"
     id("de.undercouch.download") version "1.2"
-    kotlin("jvm") version "1.3.72"
+    kotlin("jvm") version "1.4.0"
 
 }
 
@@ -25,8 +25,8 @@ repositories {
 allprojects {
     apply(plugin = "maven-publish")
     repositories {
-        spigot()
-        paper()
+        spigotmc()
+        papermc()
         bungeecord()
         jitpack()
         mavenCentral()
@@ -110,9 +110,8 @@ tasks {
             "module-info.class"
         )
     }
-    spigotPluginYaml {
-        enabled = false
-    }
+
+    //spigotPluginYaml { enabled = false }
     create("first-setup") {
 
     }

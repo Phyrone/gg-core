@@ -51,9 +51,7 @@ tasks {
     compileTestKotlin {
         kotlinOptions.jvmTarget = "1.8"
     }
-    spigotPluginYaml {
-        enabled = false
-    }
+    //spigotPluginYaml { enabled = false }
 }
 val publishPropertiesFile = File("./publish.properties")
 val publishProperties by lazy {

@@ -11,10 +11,6 @@ plugins {
 group = "de.phyrone"
 version = System.getProperty("gg.version")
 
-repositories {
-    mavenCentral()
-}
-
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
     testImplementation("junit", "junit", "4.12")
@@ -41,9 +37,12 @@ dependencies {
     api("com.github.mkremins:fanciful:ed870f3a19")
     api("com.github.Phyrone:brigardier-kotlin:1.3.3")
 
-    api("com.uchuhimo", "konf-yaml", "0.22.1")
+    //api("com.uchuhimo", "konf-yaml", "0.22.0")
+    val konf_version = "449becc276"
+    api("com.github.Cybermaxke.konf:konf-core:$konf_version")
+    api("com.github.Cybermaxke.konf:konf-yaml:$konf_version")
     listOf("exposed-core", "exposed-dao", "exposed-jdbc", "exposed-java-time", "exposed-jodatime").forEach { name ->
-        api("org.jetbrains.exposed", name, "0.24.1")
+        api("org.jetbrains.exposed", name, "0.27.1")
     }
     implementation("com.h2database:h2:1.4.200")
 
