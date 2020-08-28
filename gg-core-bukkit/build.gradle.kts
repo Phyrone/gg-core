@@ -23,7 +23,7 @@ dependencies {
     implementation(kotlin("stdlib-jdk8"))
     api(project(":gg-core-bukkit-common"))
     api(project(":gg-core-common"))
-    api("me.lucko:commodore:1.5")
+    api("me.lucko:commodore:1.9")
     testImplementation("junit", "junit", "4.12")
 }
 
