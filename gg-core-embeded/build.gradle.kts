@@ -8,7 +8,7 @@ plugins {
     maven
     `maven-publish`
     id("kr.entree.spigradle")
-    id("org.jetbrains.dokka")
+    //id("org.jetbrains.dokka")
     id("com.github.johnrengelman.shadow")
 }
 
@@ -45,6 +45,9 @@ val publishProperties by lazy {
             publishProperties.load(FileInputStream(publishPropertiesFile))
         }
     }
+}
+tasks.generateSpigotDescription{
+    enabled = false
 }
 publishing {
     repositories {

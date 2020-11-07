@@ -8,8 +8,8 @@ plugins {
     maven
     `maven-publish`
     idea
-    id("kr.entree.spigradle") version "2.2.2"
-    id("org.jetbrains.dokka") version "1.4.0"
+    id("kr.entree.spigradle") version "2.2.3"
+    //id("org.jetbrains.dokka") version "1.4.10"
     id("com.github.johnrengelman.shadow") version "5.2.0"
     id("de.undercouch.download") version "1.2"
     kotlin("jvm") version "1.4.0"
@@ -66,6 +66,7 @@ tasks {
     compileTestKotlin {
         kotlinOptions.jvmTarget = "1.8"
     }
+    /*
     dokka {
         outputFormat = "html"
         outputDirectory = "$buildDir/docs"
@@ -77,6 +78,7 @@ tasks {
         //subProjects = subprojects.map { project -> project.name }
 
     }
+     */
     shadowJar {
         classifier = ""
         baseName = "GG-Core"

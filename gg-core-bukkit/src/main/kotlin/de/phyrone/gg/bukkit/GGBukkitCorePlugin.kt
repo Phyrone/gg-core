@@ -31,7 +31,7 @@ import org.koin.dsl.module
 import java.util.*
 import java.util.function.Supplier
 
-private typealias PluginMarker = kr.entree.spigradle.Plugin
+private typealias PluginMarker = kr.entree.spigradle.annotations.SpigotPlugin
 
 @PluginMarker
 class GGBukkitCorePlugin : JavaPlugin(), GGApiProvider<Plugin, GGBukkitApi> {

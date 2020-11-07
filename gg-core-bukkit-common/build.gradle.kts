@@ -8,7 +8,7 @@ plugins {
     `maven-publish`
     kotlin("jvm")
     id("kr.entree.spigradle")
-    id("org.jetbrains.dokka")
+    //id("org.jetbrains.dokka")
 }
 
 group = "de.phyrone"
@@ -38,6 +38,7 @@ dependencies {
     api("com.github.InventivetalentDev:ReflectionHelper:1.14.8-SNAPSHOT")
     api("com.github.InventivetalentDev.SpigetUpdater:bukkit:1.4.2-SNAPSHOT")
     api("com.github.Slikey:EffectLib:828207171d")
+    api("com.github.cryptomorin:XSeries:7.6.0")
     testImplementation("junit", "junit", "4.12")
 }
 
@@ -51,7 +52,10 @@ tasks {
     compileTestKotlin {
         kotlinOptions.jvmTarget = "1.8"
     }
-    //spigotPluginYaml { enabled = false }
+    generateSpigotDescription{
+        enabled = false
+    }
+
 }
 val publishPropertiesFile = File("./publish.properties")
 val publishProperties by lazy {

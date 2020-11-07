@@ -5,7 +5,7 @@ plugins {
     maven
     `maven-publish`
     kotlin("jvm")
-    id("org.jetbrains.dokka")
+    //id("org.jetbrains.dokka")
 }
 
 group = "de.phyrone"
@@ -37,10 +37,10 @@ dependencies {
     api("com.github.mkremins:fanciful:ed870f3a19")
     api("com.github.Phyrone:brigardier-kotlin:1.3.3")
 
-    //api("com.uchuhimo", "konf-yaml", "0.22.0")
-    val konf_version = "449becc276"
-    api("com.github.Cybermaxke.konf:konf-core:$konf_version")
-    api("com.github.Cybermaxke.konf:konf-yaml:$konf_version")
+    api("com.uchuhimo", "konf-yaml", "0.23.0")
+    //val konf_version = "449becc276"
+    //api("com.github.Cybermaxke.konf:konf-core:$konf_version")
+    //api("com.github.Cybermaxke.konf:konf-yaml:$konf_version")
     listOf("exposed-core", "exposed-dao", "exposed-jdbc", "exposed-java-time", "exposed-jodatime").forEach { name ->
         api("org.jetbrains.exposed", name, "0.27.1")
     }

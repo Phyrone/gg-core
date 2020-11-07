@@ -8,7 +8,7 @@ plugins {
     `maven-publish`
     kotlin("jvm")
     id("kr.entree.spigradle")
-    id("org.jetbrains.dokka")
+    //id("org.jetbrains.dokka")
 }
 
 group = "de.phyrone"
