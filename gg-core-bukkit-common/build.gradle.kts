@@ -32,7 +32,7 @@ dependencies {
     api("com.github.deanveloper:SkullCreator:3b59220bc2")
     api("com.github.tr7zw.Item-NBT-API:item-nbt-api:2.5.0")
     api("fr.mrmicky:FastBoard:1.1.0")
-    api("me.lucko:helper:5.6.2")
+    api("me.lucko:helper:5.6.5")
     api("me.lucko:helper-profiles:1.2.0")
     api("fr.minuskube.inv:smart-invs:1.2.7")
     api("com.github.InventivetalentDev:ReflectionHelper:1.14.8-SNAPSHOT")
