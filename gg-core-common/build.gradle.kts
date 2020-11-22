@@ -35,7 +35,7 @@ dependencies {
 
     api("com.zaxxer:HikariCP:3.4.5")
     api("com.github.mkremins:fanciful:ed870f3a19")
-    api("com.github.Phyrone:brigardier-kotlin:1.3.3")
+    api("com.github.Phyrone:brigardier-kotlin:1.4.0")
 
     api("com.uchuhimo", "konf-yaml", "0.23.0")
     //val konf_version = "449becc276"
