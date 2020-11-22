@@ -28,7 +28,7 @@ dependencies {
     ).forEach { name ->
         implementation("org.apache.maven.resolver", name, "1.1.1")
     }
-    val koin_version = "2.1.6"
+    val koin_version = "2.2.1"
     api("org.koin:koin-core:$koin_version")
     api("org.koin:koin-core-ext:$koin_version")
     testImplementation("org.koin:koin-test:$koin_version")
