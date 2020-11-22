@@ -10,7 +10,7 @@ plugins {
     idea
     id("kr.entree.spigradle") version "2.2.3"
     //id("org.jetbrains.dokka") version "1.4.10"
-    id("com.github.johnrengelman.shadow") version "5.2.0"
+    id("com.github.johnrengelman.shadow") version "6.1.0"
     id("de.undercouch.download") version "1.2"
     kotlin("jvm") version "1.4.10"
 
