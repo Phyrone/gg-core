@@ -38,7 +38,7 @@ dependencies {
     api("com.github.InventivetalentDev:ReflectionHelper:1.14.8-SNAPSHOT")
     api("com.github.InventivetalentDev.SpigetUpdater:bukkit:1.4.2-SNAPSHOT")
     api("com.github.Slikey:EffectLib:828207171d")
-    api("com.github.cryptomorin:XSeries:7.6.0")
+    api("com.github.cryptomorin:XSeries:7.6.0.0.1")
     testImplementation("junit", "junit", "4.12")
 }
 
